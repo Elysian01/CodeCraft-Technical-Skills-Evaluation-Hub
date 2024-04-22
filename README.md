@@ -1,10 +1,9 @@
-# CodeCraft: Technical Skills Evaluation Hub Frontend
+# CodeCraft: Technical Skills Evaluation Hub
 
-## Available Scripts
+## Microservices
 
-In the project directory, you can run:
 
-### `npm start`
+## SubModules
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. [Technical Online Assestment Platform]()
+2. [CodeSync-Realtime-Code-Editor](https://github.com/Elysian01/CodeSync-Realtime-Code-Editor)
