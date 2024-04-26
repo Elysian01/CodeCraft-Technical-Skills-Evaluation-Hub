@@ -1,25 +1,12 @@
 import React from 'react';
 
-const JobListings = () => {
+const ViewEnrollments = () => {
   // Static data
   const jobs = [
-    { name: 'Software Developer', status: 'Active', enrollments: 25 },
-    { name: 'Graphic Designer', status: 'Inactive', enrollments: 15 },
-    { name: 'Data Analyst', status: 'Active', enrollments: 30 },
+    { name: 'Aakash', oaScore: 120, interviewScore: 90 },
+    { name: 'Abhishek', oaScore: 100, interviewScore: 85 },
+    { name: 'Raghuram', oaScore: 150, interviewScore: 95 },
   ];
-
-
-  const getStatusButton = (status) => {
-    return status === 'Active' ? (
-      <button className="text-xs bg-green-200 text-green-800 rounded-full px-2 py-1">
-        Active
-      </button>
-    ) : (
-      <button className="text-xs bg-red-200 text-red-800 rounded-full px-2 py-1">
-        Inactive
-      </button>
-    );
-  };
 
   return (
     <div className="overflow-x-auto bg-slate-800 h-screen px-20 py-10">
@@ -27,13 +14,16 @@ const JobListings = () => {
         <thead className="text-xs uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-300">
           <tr>
             <th scope="col" className="px-6 py-3">
-              Job Name
+              Candidate Name
             </th>
             <th scope="col" className="px-6 py-3">
-              View Status
+              OA Score
             </th>
             <th scope="col" className="px-6 py-3">
-              Enrollments
+              Average OA Score
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Interview
             </th>
           </tr>
         </thead>
@@ -47,9 +37,16 @@ const JobListings = () => {
                 {job.name}
               </td>
               <td className="px-6 py-4">
-                {getStatusButton(job.status)}
+                {job.oaScore}
               </td>
-              <td className="px-6 py-4">{job.enrollments}</td>
+              <td className="px-6 py-4">
+                {job.interviewScore}
+              </td>
+              <td className="px-6 py-4">
+                <button className="text-xs bg-blue-200 text-blue-800 rounded-full px-2 py-1">
+                  Schedule Interview
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -58,4 +55,4 @@ const JobListings = () => {
   );
 };
 
-export default JobListings;
+export default ViewEnrollments;

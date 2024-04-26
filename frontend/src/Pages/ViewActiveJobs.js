@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../Components/Navbar';
 
-const ViewMorePreviousJob = () => {
+const ViewActiveJobs = () => {
   // Array containing job data
   const [jobs, setJobs] = useState([
     {
@@ -25,6 +25,44 @@ const ViewMorePreviousJob = () => {
       requirements: "2+ years experience in UX/UI design, proficiency in Figma",
       enrollments: 12
     },
+    {
+      jobName: "UX/UI Designer",
+      requirements: "2+ years experience in UX/UI design, proficiency in Figma",
+      enrollments: 12
+    }
+    ,
+    {
+      jobName: "UX/UI Designer",
+      requirements: "2+ years experience in UX/UI design, proficiency in Figma",
+      enrollments: 12
+    },
+    {
+      jobName: "UX/UI Designer",
+      requirements: "2+ years experience in UX/UI design, proficiency in Figma",
+      enrollments: 12
+    },
+    {
+      jobName: "UX/UI Designer",
+      requirements: "2+ years experience in UX/UI design, proficiency in Figma",
+      enrollments: 12
+    }
+    ,
+    {
+      jobName: "UX/UI Designer",
+      requirements: "2+ years experience in UX/UI design, proficiency in Figma",
+      enrollments: 12
+    },
+    {
+      jobName: "UX/UI Designer",
+      requirements: "2+ years experience in UX/UI design, proficiency in Figma",
+      enrollments: 12
+    },
+    {
+      jobName: "UX/UI Designer",
+      requirements: "2+ years experience in UX/UI design, proficiency in Figma",
+      enrollments: 12
+    }
+    ,
     {
       jobName: "UX/UI Designer",
       requirements: "2+ years experience in UX/UI design, proficiency in Figma",
@@ -53,7 +91,7 @@ const ViewMorePreviousJob = () => {
 
   return (
     <div>
-    <Navbar/>
+     <Navbar/>
     <div className="relative overflow-x-auto dark:bg-slate-800  p-4 h-screen">
       <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 rounded shadow-lg border border-gray-600 p-4 mb-6">
         <caption className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Job Openings</caption>
@@ -68,6 +106,9 @@ const ViewMorePreviousJob = () => {
             <th scope="col" className="px-4 py-3">
               Enrollment
             </th>
+            <th scope="col" className="px-4 py-3 ">
+              View
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -79,8 +120,10 @@ const ViewMorePreviousJob = () => {
                 </td>
                 <td className="px-4 py-3">{job.requirements}</td>
                 <td className="px-4 py-3">{job.enrollments}</td>
+                <td className="px-4 py-3">
+                  <button className="text-blue-600 dark:text-blue-400 hover:underline focus:outline-none">View</button>
+                </td>
               </tr>
-              <tr className="bg-white dark:bg-gray-900 h-1"></tr> {/* White line separator */}
             </React.Fragment>
           ))}
         </tbody>
@@ -102,7 +145,9 @@ const ViewMorePreviousJob = () => {
       </div>
     </div>
     </div>
+
   );
+  
 };
 
-export default ViewMorePreviousJob;
+export default ViewActiveJobs;

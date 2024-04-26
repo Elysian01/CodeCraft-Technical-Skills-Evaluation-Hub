@@ -1,10 +1,10 @@
 import React from 'react';
 import Card from '../Components/Card';
-import StaticTable from '../Components/StaticTable';
-import Table2 from '../Components/Previousjobstable';
 import { Link } from 'react-router-dom';
 import logo from "../Assets/applogo.png"
 import Navbar from '../Components/Navbar';
+import ActiveJobs from '../Components/ActiveJobs';
+import PreviousJobs from '../Components/PreviousJobs';
 
 const Dashboard = () => {
   return (
@@ -40,8 +40,8 @@ const Dashboard = () => {
           </div>
 
       <div className="flex flex-row gap-4 px-2">
-          <StaticTable className="p-4 w-2/3"/>
-          <Table2/>
+          <ActiveJobs className="p-4 w-2/3"/>
+          <PreviousJobs/>
       </div>
     </div>
     </div>
