@@ -49,7 +49,9 @@ const PreviousJobs = () => {
                 <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                   {job.jobName}
                 </td>
-                <td className="px-6 py-4">{job.requirements}</td>
+                <td className="px-6 py-4 max-w-[17rem] overflow-hidden">
+                    <div className="max-h-10 overflow-y-auto">{job.requirements}</div>
+              </td>
                 {/* Remove the Enrollment column */}
                 {/* <td className="px-6 py-4">{job.enrollments}</td> */}
                 <td className="px-6 py-4">

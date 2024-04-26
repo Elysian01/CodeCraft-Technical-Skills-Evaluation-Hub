@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Navbar from '../Components/Navbar';
+import { SendJob } from '../API/APIs';
 
 function Jobform() {
   const [jobRole, setJobRole] = useState('');
@@ -18,19 +19,27 @@ function Jobform() {
     }
   };
 
+  
+  // Function to create DTO object from form data
+  const createJobDTO = (jobRole, jobDescription, techStack, experience, company, companyId) => {
+    return {
+      jobRole: jobRole,
+      jobDescription: jobDescription,
+      techStack: techStack,
+      experience: experience,
+      company: company,
+      companyId: companyId
+    };
+  };
+  
+  // Use the createJobDTO function inside handleSubmit
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission
-    console.log({
-      jobRole,
-      jobDescription,
-      techStack,
-      experience,
-      company,
-      companyId
-    });
+    // Create DTO object
+    const uploadData = createJobDTO(jobRole, jobDescription, techStack, experience, company, companyId);
+    // Send DTO object
+    SendJob(uploadData);
   };
-
   return (
     <div>
       <Navbar/>
