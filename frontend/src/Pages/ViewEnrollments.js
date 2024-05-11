@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 
 const ViewEnrollments = () => {
   // Static data
@@ -7,9 +8,20 @@ const ViewEnrollments = () => {
     { name: 'Abhishek', oaScore: 100, interviewScore: 85 },
     { name: 'Raghuram', oaScore: 150, interviewScore: 95 },
   ];
-
+  const location = useLocation();
+  const {  jobName, requirements } = location.state || {};;
+console.log("R: "+jobName);
   return (
     <div className="overflow-x-auto bg-slate-800 h-screen px-20 py-10">
+      <h1>
+        hi
+      </h1>
+      <h1>
+        {requirements}
+      </h1>
+      <h1>
+        {jobName}
+      </h1>
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead className="text-xs uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-300">
           <tr>

@@ -54,7 +54,7 @@ const Dashboard = () => {
           />
         </div>
         <div className="flex flex-row flex-wrap gap-2 px-2">
-          <ActiveJobs className="p-4 max-w-1/3" jobs={getJobs} />
+          <ActiveJobs className="p-4  max-w-1/3" jobs={getJobs} />
           <PreviousJobs className="p-4 w-1/3" />
         </div>
       </div>
