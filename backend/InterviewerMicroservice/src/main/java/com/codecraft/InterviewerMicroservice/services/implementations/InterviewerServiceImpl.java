@@ -1,13 +1,8 @@
 package com.codecraft.InterviewerMicroservice.services.implementations;
 
-import com.codecraft.InterviewerMicroservice.dto.JobInfoDTO;
-import com.codecraft.InterviewerMicroservice.dto.JobPostingDTO;
-import com.codecraft.InterviewerMicroservice.dto.QuestionDTO;
+import com.codecraft.InterviewerMicroservice.dto.*;
 import com.codecraft.InterviewerMicroservice.entities.*;
-import com.codecraft.InterviewerMicroservice.repository.AllRequirementsRepository;
-import com.codecraft.InterviewerMicroservice.repository.InterviewerRepository;
-import com.codecraft.InterviewerMicroservice.repository.JobRepository;
-import com.codecraft.InterviewerMicroservice.repository.QuestionRepository;
+import com.codecraft.InterviewerMicroservice.repository.*;
 import com.codecraft.InterviewerMicroservice.services.InterviewerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +25,9 @@ public class InterviewerServiceImpl implements InterviewerService {
     @Autowired
     QuestionRepository questionRepository;
 
+    @Autowired
+    EnrollmentRepository enrollmentRepository;
+
     public String login(String email, String password) {
         Interviewer candidate = interviewerRepository.findByEmail(email);
         if (candidate != null && candidate.getPassword().equals(password)) {
@@ -45,7 +43,7 @@ public class InterviewerServiceImpl implements InterviewerService {
         job.setJobName(jobPostingRequest.getJobName());
         job.setJobDescription(jobPostingRequest.getJobDescription());
         job.setStatus(jobPostingRequest.getStatus());
-        job.setNoOfEnrollments(jobPostingRequest.getNoOfEnrollments());
+//        job.setNoOfEnrollments(jobPostingRequest.getNoOfEnrollments());
         job.setRoleType(jobPostingRequest.getRoleType());
 
         // Set the Interviewer
@@ -94,7 +92,6 @@ public class InterviewerServiceImpl implements InterviewerService {
                 job.getJobName(),
                 job.getJobDescription(),
                 job.getStatus(),
-                job.getNoOfEnrollments(),
                 job.getRoleType(),
                 job.getInterviewer().getId(),
                 requirements,
@@ -116,5 +113,77 @@ public class InterviewerServiceImpl implements InterviewerService {
         List<Job> jobs = jobRepository.findByInterviewerId(id);
         return jobs.stream().map(this::mapJobToJobInfoDTO).collect(Collectors.toList());
     }
+
+    private JobEnrollmentInfoDTO mapToJobEnrollmentInfoDTO(Enrollment enrollment) {
+        return new JobEnrollmentInfoDTO(
+                enrollment.getCandidateId(),
+                enrollment.getCandidateName(),
+                enrollment.getTestScore(),
+                enrollment.getJob().getId(),
+                enrollment.getInterviewRecord() != null ? enrollment.getInterviewRecord().getId() : null
+        );
+    }
+
+    @Override
+    public List<JobEnrollmentInfoDTO> getJobEnrollments(Long jobId) {
+        List<Enrollment> enrollments = enrollmentRepository.findByJobId(jobId);
+        return enrollments.stream()
+                .map(this::mapToJobEnrollmentInfoDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean enrollInJob(JobEnrollDTO jobEnrollRequest) {
+        try {
+            // Fetch the job entity by its ID
+            Optional<Job> optionalJob = jobRepository.findById(jobEnrollRequest.getJobId());
+            if (optionalJob.isPresent()) {
+                Job job = optionalJob.get();
+
+                // Create a new enrollment record
+                Enrollment enrollment = new Enrollment();
+                enrollment.setCandidateId(jobEnrollRequest.getCandidateId());
+                enrollment.setJob(job);
+                enrollment.setCandidateName(jobEnrollRequest.getCandidateName());
+
+                // Save the enrollment record
+                enrollmentRepository.save(enrollment);
+
+                return true;
+            } else {
+                return false; // Job not found
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Log or handle the exception as needed
+            return false; // Error occurred during enrollment
+        }
+    }
+
+    @Override
+    public boolean updateTestScore(UpdateTestScoreDTO updateTestScoreRequest) {
+        try {
+            // Fetch the enrollment record by candidateId and jobId
+            Optional<Enrollment> optionalEnrollment = enrollmentRepository.findByCandidateIdAndJobId(
+                    updateTestScoreRequest.getCandidateId(),
+                    updateTestScoreRequest.getJobId());
+
+            if (optionalEnrollment.isPresent()) {
+                Enrollment enrollment = optionalEnrollment.get();
+                // Update the test score
+                enrollment.setTestScore(updateTestScoreRequest.getTestScore());
+
+                // Save the updated enrollment record
+                enrollmentRepository.save(enrollment);
+
+                return true;
+            } else {
+                return false; // Enrollment record not found
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Log or handle the exception as needed
+            return false; // Error occurred during test score update
+        }
+    }
+
 
 }

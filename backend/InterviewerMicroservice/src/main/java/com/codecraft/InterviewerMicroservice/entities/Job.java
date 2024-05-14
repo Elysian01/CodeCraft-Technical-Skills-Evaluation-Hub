@@ -21,7 +21,7 @@ public class Job {
     private String jobName;
     private String jobDescription;
     private String status;
-    private int noOfEnrollments;
+//    private int noOfEnrollments;
     private String roleType;
 
     @ManyToOne

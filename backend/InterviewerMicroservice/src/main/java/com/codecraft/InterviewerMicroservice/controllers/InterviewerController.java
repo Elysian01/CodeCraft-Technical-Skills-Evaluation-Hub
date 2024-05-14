@@ -1,8 +1,7 @@
 package com.codecraft.InterviewerMicroservice.controllers;
 
-import com.codecraft.InterviewerMicroservice.dto.JobInfoDTO;
-import com.codecraft.InterviewerMicroservice.dto.JobPostingDTO;
-import com.codecraft.InterviewerMicroservice.dto.LoginRequestDTO;
+import com.codecraft.InterviewerMicroservice.dto.*;
+import com.codecraft.InterviewerMicroservice.entities.Enrollment;
 import com.codecraft.InterviewerMicroservice.entities.Job;
 import com.codecraft.InterviewerMicroservice.services.InterviewerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +47,36 @@ public class InterviewerController {
             return ResponseEntity.ok(jobs);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @PostMapping("/job/enroll")
+    public ResponseEntity<String> enrollInJob(@RequestBody JobEnrollDTO jobEnrollRequest) {
+        boolean status = interviewerService.enrollInJob(jobEnrollRequest);
+        if (status) {
+            return ResponseEntity.ok("Enrollment Successful");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in enrollment");
+        }
+    }
+
+    @GetMapping("/jobEnrollments/{jobId}")
+    public ResponseEntity<List<JobEnrollmentInfoDTO>> getJobEnrollments(@PathVariable Long jobId) {
+        List<JobEnrollmentInfoDTO> jobs = interviewerService.getJobEnrollments(jobId);
+        if (!jobs.isEmpty()) {
+            return ResponseEntity.ok(jobs);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @PostMapping("/job/updateTestScore")
+    public ResponseEntity<String> updateTestScore(@RequestBody UpdateTestScoreDTO updateTestScoreRequest) {
+        boolean status = interviewerService.updateTestScore(updateTestScoreRequest);
+        if (status) {
+            return ResponseEntity.ok("Test Score Updated Successful");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in Test Score Updation");
         }
     }
 

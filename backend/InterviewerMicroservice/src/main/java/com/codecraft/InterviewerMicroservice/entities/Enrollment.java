@@ -17,6 +17,7 @@ public class Enrollment {
     private Long id;
 
     private Long candidateId;
+    private String candidateName;
     private String testScore;
 
     @ManyToOne

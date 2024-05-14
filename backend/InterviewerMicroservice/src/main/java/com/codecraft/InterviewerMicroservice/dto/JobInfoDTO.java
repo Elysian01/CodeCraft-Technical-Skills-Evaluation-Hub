@@ -16,7 +16,7 @@ public class JobInfoDTO {
     private String jobName;
     private String jobDescription;
     private String status;
-    private int noOfEnrollments;
+//    private int noOfEnrollments;
     private String roleType;
     private int interviewerId;
     private List<String> requirements;
