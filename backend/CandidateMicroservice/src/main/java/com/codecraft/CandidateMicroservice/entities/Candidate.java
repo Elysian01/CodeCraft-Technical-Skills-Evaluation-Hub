@@ -20,4 +20,7 @@ public class Candidate {
     private Integer id;
     private String email;
     private String password;
+
+    public Candidate(Integer cid) {
+    }
 }

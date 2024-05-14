@@ -1,5 +1,6 @@
 package com.codecraft.CandidateMicroservice.controllers;
 
+import com.codecraft.CandidateMicroservice.dto.JobApplyDTO;
 import com.codecraft.CandidateMicroservice.dto.LoginRequestDTO;
 import com.codecraft.CandidateMicroservice.services.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,5 +23,16 @@ public class CandidateController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Credentials or User is Unauthorized");
         }
+    }
+
+    @PostMapping("/apply")
+    public ResponseEntity<String> login(@RequestBody JobApplyDTO jobRequest) {
+        String token = candidateService.applyJob(jobRequest);
+        if (token != null) {
+            return ResponseEntity.ok("Job application successful");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to apply for the job");
+        }
+
     }
 }
