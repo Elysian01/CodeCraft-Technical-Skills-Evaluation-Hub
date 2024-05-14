@@ -100,8 +100,4 @@ public class InterviewerController {
         }
     }
 
-    // close a job (status = close)
-
-
-
 }
