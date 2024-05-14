@@ -18,7 +18,7 @@ public class FulfilledRequirements {
 
     @ManyToOne
     @JoinColumn(name = "req_id")
-    private JobRequirement jobRequirement;
+    private JobRequirements jobRequirements;
 
     private Long cid;
     private Long jid;

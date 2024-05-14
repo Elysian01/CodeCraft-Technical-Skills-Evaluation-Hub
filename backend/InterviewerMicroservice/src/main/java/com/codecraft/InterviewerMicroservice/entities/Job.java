@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -24,4 +26,7 @@ public class Job {
     @ManyToOne
     @JoinColumn(name = "interviewer_id")
     private Interviewer interviewer;
+
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL)
+    private List<JobRequirements> jobRequirements;
 }

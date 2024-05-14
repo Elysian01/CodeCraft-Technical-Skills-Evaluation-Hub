@@ -1,7 +1,9 @@
 package com.codecraft.InterviewerMicroservice.controllers;
 
+import com.codecraft.InterviewerMicroservice.dto.JobInfoDTO;
 import com.codecraft.InterviewerMicroservice.dto.JobPostingDTO;
 import com.codecraft.InterviewerMicroservice.dto.LoginRequestDTO;
+import com.codecraft.InterviewerMicroservice.entities.Job;
 import com.codecraft.InterviewerMicroservice.services.InterviewerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,6 +38,16 @@ public class InterviewerController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
+        }
+    }
+
+    @PostMapping("/jobs/{id}")
+    public ResponseEntity<List<JobInfoDTO>> getJobs(@PathVariable int id) {
+        List<JobInfoDTO> jobs = interviewerService.getJobs(id);
+        if (!jobs.isEmpty()) {
+            return ResponseEntity.ok(jobs);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 

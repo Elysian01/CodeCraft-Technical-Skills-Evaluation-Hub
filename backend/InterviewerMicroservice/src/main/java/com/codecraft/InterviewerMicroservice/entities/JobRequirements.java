@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class JobRequirement {
+public class JobRequirements {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

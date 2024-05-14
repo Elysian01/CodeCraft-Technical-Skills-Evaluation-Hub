@@ -18,6 +18,5 @@ public class AllRequirements {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reqId;
-
     private String requirementName;
 }
