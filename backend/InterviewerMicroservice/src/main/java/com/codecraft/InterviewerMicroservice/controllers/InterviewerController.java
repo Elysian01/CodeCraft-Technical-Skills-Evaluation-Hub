@@ -1,5 +1,6 @@
 package com.codecraft.InterviewerMicroservice.controllers;
 
+import com.codecraft.InterviewerMicroservice.dto.JobPostingDTO;
 import com.codecraft.InterviewerMicroservice.dto.LoginRequestDTO;
 import com.codecraft.InterviewerMicroservice.services.InterviewerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,5 +26,21 @@ public class InterviewerController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Credentials or User is Unauthorized");
         }
     }
+
+    @PostMapping("/createJob")
+    public ResponseEntity<String> createJob(@RequestBody JobPostingDTO jobPostingRequest) {
+        String message = interviewerService.createJob(jobPostingRequest);
+        if (message.equals("Job created successfully")) {
+            return ResponseEntity.ok(message);
+        } else if (message.equals("Interviewer not found for the given ID")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
+        }
+    }
+
+    // close a job (status = close)
+
+
 
 }
