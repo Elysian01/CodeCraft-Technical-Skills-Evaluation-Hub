@@ -1,6 +1,4 @@
 package com.codecraft.CandidateMicroservice.entities;
-
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,8 +20,8 @@ public class Applied {
     private Candidate candidate;
 
     private Integer jid;
-    private String job_name;
-    private String test_score;
-    private String applied_status; // success, pending, rejected
+    private String jobName;
+    private String testScore;
+    private String appliedStatus; // success, pending, rejected
 }
 

@@ -1,12 +1,13 @@
 package com.codecraft.CandidateMicroservice.controllers;
 
-import com.codecraft.CandidateMicroservice.dto.JobApplyDTO;
-import com.codecraft.CandidateMicroservice.dto.LoginRequestDTO;
+import com.codecraft.CandidateMicroservice.dto.*;
 import com.codecraft.CandidateMicroservice.services.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/candidate")
@@ -25,6 +26,9 @@ public class CandidateController {
         }
     }
 
+
+
+    // candidate applying for a job
     @PostMapping("/apply")
     public ResponseEntity<String> login(@RequestBody JobApplyDTO jobRequest) {
         String token = candidateService.applyJob(jobRequest);
@@ -33,6 +37,38 @@ public class CandidateController {
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to apply for the job");
         }
-
     }
+
+    // Get all the applied jobs given candidate-id
+    @GetMapping("/appliedJobs/{id}")
+    public ResponseEntity<List<AppliedJobDTO>> listOfAppliedJobs(@PathVariable Integer id) {
+        List<AppliedJobDTO> jobs = candidateService.listOfAppliedJobs(id);
+        if (jobs != null) {
+            return ResponseEntity.ok(jobs);
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @PatchMapping("/updateStatus/{id}")
+    public ResponseEntity<String> updateAppliedStatus(@PathVariable Integer id, @RequestBody UpdateAppliedJobStatusDTO request) {
+        boolean updated = candidateService.updateAppliedStatus(id, request.getAppliedStatus());
+        if (updated) {
+            return ResponseEntity.ok("Applied status updated successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update applied status.");
+        }
+    }
+
+    @PatchMapping("/updateTestScore/{id}")
+    public ResponseEntity<String> updateTestScore(@PathVariable Integer id, @RequestBody UpdateTestScoreDTO request) {
+        boolean updated = candidateService.updateTestScore(id, request.getTestScore());
+        if (updated) {
+            return ResponseEntity.ok("Test score updated successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update test score.");
+        }
+    }
+
+
 }
