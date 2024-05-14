@@ -41,7 +41,7 @@ public class InterviewerController {
         }
     }
 
-    @PostMapping("/jobs/{id}")
+    @GetMapping("/jobs/{id}")
     public ResponseEntity<List<JobInfoDTO>> getJobs(@PathVariable int id) {
         List<JobInfoDTO> jobs = interviewerService.getJobs(id);
         if (!jobs.isEmpty()) {

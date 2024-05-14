@@ -6,8 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.List;
-
+import java.util.Set;
 @Entity
 @Getter
 @Setter
@@ -27,6 +28,15 @@ public class Job {
     @JoinColumn(name = "interviewer_id")
     private Interviewer interviewer;
 
-    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL)
-    private List<JobRequirements> jobRequirements;
+    @ManyToMany
+    @JoinTable(name = "job_questions",
+            joinColumns = @JoinColumn(name = "job_id"),
+            inverseJoinColumns = @JoinColumn(name = "question_id"))
+    private Set<Question> questions = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(name = "job_requirements",
+            joinColumns = @JoinColumn(name = "job_id"),
+            inverseJoinColumns = @JoinColumn(name = "requirement_id"))
+    private Set<AllRequirements> allRequirements = new HashSet<>();
 }

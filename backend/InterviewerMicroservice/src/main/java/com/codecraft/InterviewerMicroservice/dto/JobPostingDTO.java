@@ -8,16 +8,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class JobPostingDTO {
-    private String JobName;
+    private String jobName;
     private String jobDescription;
-    private String status = "open"; // open, close
+    private String status = "open";
     private int noOfEnrollments = 0;
     private String roleType;
     private int interviewerId;
-    private List<String> requirements;
+    private Set<Long> questions;
+    private Set<String> requirements;
 }

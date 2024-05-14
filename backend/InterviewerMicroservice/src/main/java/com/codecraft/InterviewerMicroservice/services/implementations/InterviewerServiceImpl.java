@@ -2,20 +2,17 @@ package com.codecraft.InterviewerMicroservice.services.implementations;
 
 import com.codecraft.InterviewerMicroservice.dto.JobInfoDTO;
 import com.codecraft.InterviewerMicroservice.dto.JobPostingDTO;
-import com.codecraft.InterviewerMicroservice.entities.AllRequirements;
-import com.codecraft.InterviewerMicroservice.entities.Interviewer;
-import com.codecraft.InterviewerMicroservice.entities.Job;
-import com.codecraft.InterviewerMicroservice.entities.JobRequirements;
+import com.codecraft.InterviewerMicroservice.dto.QuestionDTO;
+import com.codecraft.InterviewerMicroservice.entities.*;
 import com.codecraft.InterviewerMicroservice.repository.AllRequirementsRepository;
 import com.codecraft.InterviewerMicroservice.repository.InterviewerRepository;
 import com.codecraft.InterviewerMicroservice.repository.JobRepository;
+import com.codecraft.InterviewerMicroservice.repository.QuestionRepository;
 import com.codecraft.InterviewerMicroservice.services.InterviewerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +26,9 @@ public class InterviewerServiceImpl implements InterviewerService {
 
     @Autowired
     AllRequirementsRepository allRequirementsRepository;
+
+    @Autowired
+    QuestionRepository questionRepository;
 
     public String login(String email, String password) {
         Interviewer candidate = interviewerRepository.findByEmail(email);
@@ -53,21 +53,21 @@ public class InterviewerServiceImpl implements InterviewerService {
         if (interviewerOptional.isPresent()) {
             job.setInterviewer(interviewerOptional.get());
 
-            // Create JobRequirement entities for each requirement
-            List<JobRequirements> jobRequirements = new ArrayList<>();
+            // Set Requirements
+            Set<AllRequirements> allRequirements = new HashSet<>();
             for (String requirementName : jobPostingRequest.getRequirements()) {
-                // Find the AllRequirements entity by requirementName
                 Optional<AllRequirements> requirementOptional = allRequirementsRepository.findByRequirementName(requirementName);
-                if (requirementOptional.isPresent()) {
-                    JobRequirements jobRequirement = new JobRequirements();
-                    jobRequirement.setJob(job);
-                    jobRequirement.setAllRequirements(requirementOptional.get());
-                    jobRequirements.add(jobRequirement);
-                } else {
-                    return "Requirement '" + requirementName + "' not found in the system";
-                }
+                requirementOptional.ifPresent(allRequirements::add);
             }
-            job.setJobRequirements(jobRequirements); // Set the list of jobRequirements
+            job.setAllRequirements(allRequirements);
+
+            // Set Questions
+            Set<Question> questions = new HashSet<>();
+            for (Long questionId : jobPostingRequest.getQuestions()) {
+                Optional<Question> questionOptional = questionRepository.findById(questionId);
+                questionOptional.ifPresent(questions::add);
+            }
+            job.setQuestions(questions);
 
             Job savedJob = jobRepository.save(job);
             if (savedJob != null) {
@@ -80,13 +80,13 @@ public class InterviewerServiceImpl implements InterviewerService {
         }
     }
 
-
-
-
-    // Helper method to map Job entity to JobInfoDTO
     private JobInfoDTO mapJobToJobInfoDTO(Job job) {
-        List<String> requirements = job.getJobRequirements().stream()
-                .map(jobRequirement -> jobRequirement.getAllRequirements().getRequirementName())
+        List<String> requirements = job.getAllRequirements().stream()
+                .map(AllRequirements::getRequirementName)
+                .collect(Collectors.toList());
+
+        List<QuestionDTO> questions = job.getQuestions().stream()
+                .map(this::mapQuestionToQuestionDTO)
                 .collect(Collectors.toList());
 
         return new JobInfoDTO(
@@ -97,13 +97,24 @@ public class InterviewerServiceImpl implements InterviewerService {
                 job.getNoOfEnrollments(),
                 job.getRoleType(),
                 job.getInterviewer().getId(),
-                requirements
+                requirements,
+                questions
         );
     }
 
-    @Override
+    private QuestionDTO mapQuestionToQuestionDTO(Question question) {
+        return new QuestionDTO(
+                question.getId(),
+                question.getQuestion(),
+                question.getTopic(),
+                question.getQuestionName(),
+                question.getTestcases()
+        );
+    }
+
     public List<JobInfoDTO> getJobs(int id) {
         List<Job> jobs = jobRepository.findByInterviewerId(id);
         return jobs.stream().map(this::mapJobToJobInfoDTO).collect(Collectors.toList());
     }
+
 }

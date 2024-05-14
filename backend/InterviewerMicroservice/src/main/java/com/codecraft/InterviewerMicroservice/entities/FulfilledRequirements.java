@@ -15,11 +15,8 @@ public class FulfilledRequirements {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "req_id")
-    private JobRequirements jobRequirements;
-
+    private Long jobRequirementsId;
     private Long cid;
     private Long jid;
+
 }
