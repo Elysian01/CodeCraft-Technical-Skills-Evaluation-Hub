@@ -80,6 +80,26 @@ public class InterviewerController {
         }
     }
 
+    @PostMapping("/job/interviewRecord")
+    public ResponseEntity<String> postInterviewRecord(@RequestBody PostInterviewRecordDTO postInterviewRecordRequest) {
+        boolean status = interviewerService.postInterviewRecord(postInterviewRecordRequest);
+        if (status) {
+            return ResponseEntity.ok("Interview Record Posted Successful");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in Posting Interview Record");
+        }
+    }
+
+    @GetMapping("/job/interviewRecord/{interviewRecordId}")
+    public ResponseEntity<InterviewRecordInfoDTO> getInterviewRecord(@PathVariable Long interviewRecordId) {
+        InterviewRecordInfoDTO info = interviewerService.getInterviewRecord(interviewRecordId);
+        if (info != null) {
+            return ResponseEntity.ok(info);
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
     // close a job (status = close)
 
 

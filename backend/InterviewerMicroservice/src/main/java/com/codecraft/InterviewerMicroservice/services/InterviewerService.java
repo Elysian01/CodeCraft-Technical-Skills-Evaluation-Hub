@@ -17,4 +17,8 @@ public interface InterviewerService {
     boolean enrollInJob(JobEnrollDTO jobEnrollRequest);
 
     boolean updateTestScore(UpdateTestScoreDTO updateTestScoreRequest);
+
+    boolean postInterviewRecord(PostInterviewRecordDTO postInterviewRecordRequest);
+
+    InterviewRecordInfoDTO getInterviewRecord(Long interviewRecordId);
 }

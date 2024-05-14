@@ -28,6 +28,12 @@ public class InterviewerServiceImpl implements InterviewerService {
     @Autowired
     EnrollmentRepository enrollmentRepository;
 
+    @Autowired
+    private InterviewRecordRepository interviewRecordRepository;
+
+    @Autowired
+    private FulfilledRequirementsRepository fulfilledRequirementsRepository;
+
     public String login(String email, String password) {
         Interviewer candidate = interviewerRepository.findByEmail(email);
         if (candidate != null && candidate.getPassword().equals(password)) {
@@ -185,5 +191,67 @@ public class InterviewerServiceImpl implements InterviewerService {
         }
     }
 
+    @Override
+    public boolean postInterviewRecord(PostInterviewRecordDTO postInterviewRecordRequest) {
+        // Create and save InterviewRecord entity
+        InterviewRecord interviewRecord = new InterviewRecord();
+        interviewRecord.setCandidateId(postInterviewRecordRequest.getCandidateId());
+        interviewRecord.setJob(jobRepository.findById(postInterviewRecordRequest.getJobId()).orElse(null));
+        interviewRecord.setPositiveFeedback(postInterviewRecordRequest.getPositiveFeedback());
+        interviewRecord.setNegativeFeedback(postInterviewRecordRequest.getNegativeFeedback());
+        interviewRecordRepository.save(interviewRecord);
+
+        // Fetch AllRequirements entities based on provided requirement names
+        List<AllRequirements> allRequirements = allRequirementsRepository.findByRequirementNameIn(
+                postInterviewRecordRequest.getFullfilledRequirements());
+
+        // Create and save FulfilledRequirements entity
+        FulfilledRequirements fulfilledRequirements = new FulfilledRequirements();
+        fulfilledRequirements.setInterviewRecordId(interviewRecord.getId());
+        fulfilledRequirements.setFulfilledRequirements(new HashSet<>(allRequirements));
+        fulfilledRequirementsRepository.save(fulfilledRequirements);
+
+        // Update corresponding Enrollment entity
+        Optional<Enrollment> optionalEnrollment = enrollmentRepository.findByCandidateIdAndJobId(
+                postInterviewRecordRequest.getCandidateId(),
+                postInterviewRecordRequest.getJobId());
+        if (optionalEnrollment.isPresent()) {
+            Enrollment enrollment = optionalEnrollment.get();
+            enrollment.setInterviewRecord(interviewRecord);
+            enrollmentRepository.save(enrollment);
+        }
+        return true;
+    }
+
+    @Override
+    public InterviewRecordInfoDTO getInterviewRecord(Long interviewRecordId) {
+        InterviewRecord interviewRecord = interviewRecordRepository.findById(interviewRecordId)
+                .orElseThrow(() -> new RuntimeException("Interview record not found"));
+
+        Job job = interviewRecord.getJob();
+
+        List<String> fulfilledRequirements = fulfilledRequirementsRepository
+                .findByInterviewRecordId(interviewRecordId)
+                .stream()
+                .flatMap(fr -> fr.getFulfilledRequirements().stream())
+                .map(AllRequirements::getRequirementName)
+                .collect(Collectors.toList());
+
+        List<String> requirements = job.getAllRequirements()
+                .stream()
+                .map(AllRequirements::getRequirementName)
+                .collect(Collectors.toList());
+
+        return new InterviewRecordInfoDTO(
+                job.getId(),
+                job.getJobName(),
+                job.getJobDescription(),
+                requirements,
+                interviewRecord.getCandidateId(),
+                interviewRecord.getPositiveFeedback(),
+                interviewRecord.getNegativeFeedback(),
+                fulfilledRequirements
+        );
+    }
 
 }
