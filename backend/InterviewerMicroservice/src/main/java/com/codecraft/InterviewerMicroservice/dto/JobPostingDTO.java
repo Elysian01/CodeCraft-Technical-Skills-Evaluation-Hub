@@ -20,6 +20,5 @@ public class JobPostingDTO {
     private int noOfEnrollments = 0;
     private String roleType;
     private int interviewerId;
-    private Set<Long> questions;
     private Set<String> requirements;
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface InterviewerService {
     String login(String email, String password);
-
+    int activeJobsCount(int id);
     String createJob(JobPostingDTO jobPostingRequest);
 
     List<JobInfoDTO> getJobs(int id);

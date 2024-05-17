@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/interviewer")
 public class InterviewerController {
 
@@ -27,9 +28,15 @@ public class InterviewerController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Credentials or User is Unauthorized");
         }
     }
+    @GetMapping("/activeJobs/{id}")
+    public int activeJobsCountController(@PathVariable int id){
+        return interviewerService.activeJobsCount(id);
+
+    }
 
     @PostMapping("/createJob")
     public ResponseEntity<String> createJob(@RequestBody JobPostingDTO jobPostingRequest) {
+        System.out.println(jobPostingRequest);
         String message = interviewerService.createJob(jobPostingRequest);
         if (message.equals("Job created successfully")) {
             return ResponseEntity.ok(message);

@@ -37,20 +37,31 @@ public class InterviewerServiceImpl implements InterviewerService {
     public String login(String email, String password) {
         Interviewer candidate = interviewerRepository.findByEmail(email);
         if (candidate != null && candidate.getPassword().equals(password)) {
-            return "Authorized";
+            return candidate.getId().toString();
         }
         return null;
+    }
+    @Override
+    public int activeJobsCount(int id){
+        System.out.println(id);
+        Optional<Interviewer> i= interviewerRepository.findById(id);
+        System.out.println(i.get().getEmail());
+        return jobRepository.countAllByInterviewerId(id);
     }
 
     @Override
     public String createJob(JobPostingDTO jobPostingRequest) {
+        System.out.println(jobPostingRequest);
         // Mapping JobPostingDTO to Job entity
         Job job = new Job();
         job.setJobName(jobPostingRequest.getJobName());
+        System.out.println(true);
         job.setJobDescription(jobPostingRequest.getJobDescription());
+        System.out.println(true);
         job.setStatus(jobPostingRequest.getStatus());
 //        job.setNoOfEnrollments(jobPostingRequest.getNoOfEnrollments());
         job.setRoleType(jobPostingRequest.getRoleType());
+        System.out.println(true);
 
         // Set the Interviewer
         Optional<Interviewer> interviewerOptional = interviewerRepository.findById(jobPostingRequest.getInterviewerId());
@@ -64,14 +75,6 @@ public class InterviewerServiceImpl implements InterviewerService {
                 requirementOptional.ifPresent(allRequirements::add);
             }
             job.setAllRequirements(allRequirements);
-
-            // Set Questions
-            Set<Question> questions = new HashSet<>();
-            for (Long questionId : jobPostingRequest.getQuestions()) {
-                Optional<Question> questionOptional = questionRepository.findById(questionId);
-                questionOptional.ifPresent(questions::add);
-            }
-            job.setQuestions(questions);
 
             Job savedJob = jobRepository.save(job);
             if (savedJob != null) {
@@ -98,6 +101,7 @@ public class InterviewerServiceImpl implements InterviewerService {
                 job.getJobName(),
                 job.getJobDescription(),
                 job.getStatus(),
+                job.getNoOfEnrollments(),
                 job.getRoleType(),
                 job.getInterviewer().getId(),
                 requirements,
@@ -115,9 +119,15 @@ public class InterviewerServiceImpl implements InterviewerService {
         );
     }
 
+
+
     public List<JobInfoDTO> getJobs(int id) {
         List<Job> jobs = jobRepository.findByInterviewerId(id);
-        return jobs.stream().map(this::mapJobToJobInfoDTO).collect(Collectors.toList());
+        return jobs.stream()
+                .filter(job -> job.getStatus().equals("open"))
+                .map(this::mapJobToJobInfoDTO)
+                .collect(Collectors.toList());
+
     }
 
     private JobEnrollmentInfoDTO mapToJobEnrollmentInfoDTO(Enrollment enrollment) {

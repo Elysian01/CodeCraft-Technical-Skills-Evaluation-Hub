@@ -21,11 +21,11 @@ public class Job {
     private String jobName;
     private String jobDescription;
     private String status;
-//    private int noOfEnrollments;
+    private int noOfEnrollments;
     private String roleType;
 
     @ManyToOne
-    @JoinColumn(name = "interviewer_id")
+    @JoinColumn(name = "interviewerid")
     private Interviewer interviewer;
 
     @ManyToMany
