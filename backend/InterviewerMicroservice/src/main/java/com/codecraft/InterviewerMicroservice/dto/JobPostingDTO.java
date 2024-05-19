@@ -14,11 +14,17 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class JobPostingDTO {
-    private String jobName;
+    private String company;
+    private String contact;
     private String jobDescription;
     private String status = "open";
     private int noOfEnrollments = 0;
     private String roleType;
     private int interviewerId;
+    private int experience;
     private Set<String> requirements;
 }
+
+
+
+

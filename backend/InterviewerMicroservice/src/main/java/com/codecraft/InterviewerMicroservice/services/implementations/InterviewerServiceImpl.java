@@ -48,13 +48,19 @@ public class InterviewerServiceImpl implements InterviewerService {
         System.out.println(i.get().getEmail());
         return jobRepository.countAllByInterviewerId(id);
     }
+    @Override
+    public List<Job> allactiveJobsCount(){
+
+        return jobRepository.findAllByStatus("open");
+    }
 
     @Override
     public String createJob(JobPostingDTO jobPostingRequest) {
         System.out.println(jobPostingRequest);
         // Mapping JobPostingDTO to Job entity
         Job job = new Job();
-        job.setJobName(jobPostingRequest.getJobName());
+        job.setCompany(jobPostingRequest.getCompany());
+        job.setContact(jobPostingRequest.getContact());
         System.out.println(true);
         job.setJobDescription(jobPostingRequest.getJobDescription());
         System.out.println(true);
@@ -98,7 +104,7 @@ public class InterviewerServiceImpl implements InterviewerService {
 
         return new JobInfoDTO(
                 job.getId(),
-                job.getJobName(),
+                job.getCompany(),
                 job.getJobDescription(),
                 job.getStatus(),
                 job.getNoOfEnrollments(),
@@ -254,7 +260,7 @@ public class InterviewerServiceImpl implements InterviewerService {
 
         return new InterviewRecordInfoDTO(
                 job.getId(),
-                job.getJobName(),
+                job.getCompany(),
                 job.getJobDescription(),
                 requirements,
                 interviewRecord.getCandidateId(),

@@ -11,4 +11,6 @@ public interface JobRepository  extends JpaRepository<Job, Long> {
 
     List<Job> findByInterviewerId(int id);
     int countAllByInterviewerId(int interviewer);
+    List<Job> findAllByStatus(String status);
+
 }

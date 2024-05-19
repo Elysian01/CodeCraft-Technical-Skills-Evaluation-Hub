@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/interviewer")
+    @RequestMapping("/interviewer")
 public class InterviewerController {
 
     @Autowired
@@ -31,6 +31,11 @@ public class InterviewerController {
     @GetMapping("/activeJobs/{id}")
     public int activeJobsCountController(@PathVariable int id){
         return interviewerService.activeJobsCount(id);
+
+    }
+    @GetMapping("/all-active-jobs")
+    public List<Job> allactiveJobsCountController(){
+        return interviewerService.allactiveJobsCount();
 
     }
 

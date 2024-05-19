@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/candidate")
 public class CandidateController {
@@ -31,6 +31,7 @@ public class CandidateController {
     // candidate applying for a job
     @PostMapping("/apply")
     public ResponseEntity<String> login(@RequestBody JobApplyDTO jobRequest) {
+        System.out.println(jobRequest);
         String token = candidateService.applyJob(jobRequest);
         if (token != null) {
             return ResponseEntity.ok("Job application successful");
@@ -69,6 +70,4 @@ public class CandidateController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update test score.");
         }
     }
-
-
 }

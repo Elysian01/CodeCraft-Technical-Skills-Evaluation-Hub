@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class JobApplyDTO {
     private Integer cid;
     private Integer jid;
-    private String job_name;
+    private String company_name;
     private String test_score;
     private String applied_status = "pending";
 }

@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class JobInfoDTO {
     private Long id;
-    private String jobName;
+    private String company;
     private String jobDescription;
     private String status;
     private int noOfEnrollments;
