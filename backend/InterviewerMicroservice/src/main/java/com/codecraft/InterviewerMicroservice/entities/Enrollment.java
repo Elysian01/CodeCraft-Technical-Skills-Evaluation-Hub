@@ -23,8 +23,8 @@ public class Enrollment {
     @ManyToOne
     @JoinColumn(name = "job_id")
     private Job job;
-
-    @OneToOne
-    @JoinColumn(name = "interview_record_id")
-    private InterviewRecord interviewRecord;
+//
+//    @OneToOne
+//    @JoinColumn(name = "interview_record_id")
+//    private InterviewRecord interviewRecord;
 }

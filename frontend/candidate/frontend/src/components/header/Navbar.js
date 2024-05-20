@@ -7,9 +7,9 @@ function Navbar() {
 	// const token = useSelector((state) => state.auth.token);
 	const navigate = useNavigate();
 	async function handleLogout() {
-		// const headers = { Authorization: `Bearer ${token}` };
-		// const response = await postRequest(`/auth/logout`, token, headers);
-		// navigate("/", { replace: true });
+		await localStorage.removeItem("candidateId")
+		navigate("/");
+		console.log("Cid removed")
 	}
 
 	const [show, setShow] = useState(false);
@@ -109,16 +109,9 @@ function Navbar() {
 				</li>
 				<li>
 					<>
-						<Link className="nav-item" to="/view-jobs">
-							View Jobs
-						</Link>
-					</>
-				</li>
-				<li>
-					<>
-						<Link className="nav-item" to="/applied-jobs">
-							Applied Jobs
-						</Link>
+						<span className="nav-item" onClick={handleLogout}>
+							Logout
+						</span>
 					</>
 				</li>
 			</ul>

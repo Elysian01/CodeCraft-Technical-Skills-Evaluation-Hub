@@ -2,13 +2,18 @@ package com.codecraft.CandidateMicroservice.services.implementations;
 
 import com.codecraft.CandidateMicroservice.dto.AppliedJobDTO;
 import com.codecraft.CandidateMicroservice.dto.JobApplyDTO;
+import com.codecraft.CandidateMicroservice.dto.JobEnrollDTO;
+import com.codecraft.CandidateMicroservice.dto.JobForCandidateMicroserviceDTO;
 import com.codecraft.CandidateMicroservice.entities.Applied;
 import com.codecraft.CandidateMicroservice.entities.Candidate;
 import com.codecraft.CandidateMicroservice.repository.AppliedRepository;
 import com.codecraft.CandidateMicroservice.repository.CandidateRepository;
 import com.codecraft.CandidateMicroservice.services.CandidateService;
+import com.codecraft.CandidateMicroservice.services.InterviewerClient;
+
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,6 +28,11 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Autowired
     private AppliedRepository appliedRepository;
+    private InterviewerClient InterviewerClient;
+
+    public CandidateServiceImpl(InterviewerClient interviewerClient) {
+        this.InterviewerClient = interviewerClient;
+    }
 
     public String login(String email, String password) {
         Candidate candidate = candidateRepository.findByEmail(email);
@@ -42,9 +52,17 @@ public class CandidateServiceImpl implements CandidateService {
             applied.setCandidate(candidate);
             applied.setJid(jobRequest.getJid());
             applied.setJobName(jobRequest.getCompany_name());
-            applied.setTestScore(jobRequest.getTest_score());
+            //applied.setTestScore(jobRequest.getTest_score());
             applied.setAppliedStatus(jobRequest.getApplied_status());
             appliedRepository.save(applied);
+
+            JobEnrollDTO dto = new JobEnrollDTO();
+            dto.setCandidateId(candidate.getId().longValue());
+            dto.setJobId(jobRequest.getJid().longValue());
+            dto.setCandidateName(candidate.getEmail());
+            System.out.println(dto);
+            ResponseEntity<String> d = InterviewerClient.enrollInJob(dto);
+            System.out.println(d);
             return "Success"; // You may return any token or message as needed
         } catch (Exception e) {
             e.printStackTrace();
@@ -55,14 +73,20 @@ public class CandidateServiceImpl implements CandidateService {
     @Override
     public List<AppliedJobDTO> listOfAppliedJobs(Integer id) {
         List<Applied> appliedList = appliedRepository.findByCandidateId(id);
+
         List<AppliedJobDTO> appliedJobDTOList = new ArrayList<>();
         for (Applied applied : appliedList) {
+            System.out.println(applied.getJid());
+            JobForCandidateMicroserviceDTO d = InterviewerClient.getJob(applied.getJid()).getBody().get();
+
             appliedJobDTOList.add(new AppliedJobDTO(
                     applied.getId(),
                     applied.getCandidate().getId(),
                     applied.getJid(),
                     applied.getJobName(),
-                    applied.getTestScore(),
+                    d.getRoleType(),
+                    d.getJobDescription(),
+                    applied.getInterviewDate(),
                     applied.getAppliedStatus()
             ));
         }
@@ -88,7 +112,7 @@ public class CandidateServiceImpl implements CandidateService {
         Optional<Applied> appliedOptional = appliedRepository.findById(id);
         if (appliedOptional.isPresent()) {
             Applied applied = appliedOptional.get();
-            applied.setTestScore(testScore);
+           // applied.setTestScore(testScore);
             appliedRepository.save(applied);
             return true;
         }

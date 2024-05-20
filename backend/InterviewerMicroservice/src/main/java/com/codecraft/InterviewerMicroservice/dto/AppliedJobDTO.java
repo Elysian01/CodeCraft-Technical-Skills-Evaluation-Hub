@@ -1,8 +1,6 @@
-package com.codecraft.CandidateMicroservice.dto;
+package com.codecraft.InterviewerMicroservice.dto;
 
 import lombok.*;
-
-import java.sql.Date;
 
 @Getter
 @Setter
@@ -13,9 +11,7 @@ public class AppliedJobDTO {
     private Integer cid;
     private Integer jid;
     private String jobName;
-    private String jobRole;
-    private String jobDescription;
-    private Date interviewDate;
+    private String testScore;
     private String appliedStatus = "pending";
 }
 

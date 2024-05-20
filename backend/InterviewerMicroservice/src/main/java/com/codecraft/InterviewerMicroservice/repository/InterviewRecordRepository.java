@@ -1,6 +1,6 @@
 package com.codecraft.InterviewerMicroservice.repository;
 
-import com.codecraft.InterviewerMicroservice.entities.FulfilledRequirements;
+//import com.codecraft.InterviewerMicroservice.entities.FulfilledRequirements;
 import com.codecraft.InterviewerMicroservice.entities.InterviewRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 

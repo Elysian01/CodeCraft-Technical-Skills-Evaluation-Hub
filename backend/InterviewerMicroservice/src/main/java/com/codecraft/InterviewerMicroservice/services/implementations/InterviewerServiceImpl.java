@@ -31,8 +31,8 @@ public class InterviewerServiceImpl implements InterviewerService {
     @Autowired
     private InterviewRecordRepository interviewRecordRepository;
 
-    @Autowired
-    private FulfilledRequirementsRepository fulfilledRequirementsRepository;
+//    @Autowired
+//    private FulfilledRequirementsRepository fulfilledRequirementsRepository;
 
     public String login(String email, String password) {
         Interviewer candidate = interviewerRepository.findByEmail(email);
@@ -141,8 +141,8 @@ public class InterviewerServiceImpl implements InterviewerService {
                 enrollment.getCandidateId(),
                 enrollment.getCandidateName(),
                 enrollment.getTestScore(),
-                enrollment.getJob().getId(),
-                enrollment.getInterviewRecord() != null ? enrollment.getInterviewRecord().getId() : null
+                enrollment.getJob().getId()
+                //enrollment.getInterviewRecord() != null ? enrollment.getInterviewRecord().getId() : null
         );
     }
 
@@ -161,6 +161,8 @@ public class InterviewerServiceImpl implements InterviewerService {
             Optional<Job> optionalJob = jobRepository.findById(jobEnrollRequest.getJobId());
             if (optionalJob.isPresent()) {
                 Job job = optionalJob.get();
+                job.setNoOfEnrollments(job.getNoOfEnrollments()+1);
+                jobRepository.save(job);
 
                 // Create a new enrollment record
                 Enrollment enrollment = new Enrollment();
@@ -206,68 +208,89 @@ public class InterviewerServiceImpl implements InterviewerService {
             return false; // Error occurred during test score update
         }
     }
+@Override
+public Optional<JobForCandidateMicroserviceDTO> getJob(long id) {
+    Optional<Job> job = jobRepository.findById(id);
+    if (job.isPresent()) {
+        Job presentJob = job.get();
+        JobForCandidateMicroserviceDTO jobdto = new JobForCandidateMicroserviceDTO();
+        jobdto.setJobDescription(presentJob.getJobDescription());
 
-    @Override
-    public boolean postInterviewRecord(PostInterviewRecordDTO postInterviewRecordRequest) {
-        // Create and save InterviewRecord entity
-        InterviewRecord interviewRecord = new InterviewRecord();
-        interviewRecord.setCandidateId(postInterviewRecordRequest.getCandidateId());
-        interviewRecord.setJob(jobRepository.findById(postInterviewRecordRequest.getJobId()).orElse(null));
-        interviewRecord.setPositiveFeedback(postInterviewRecordRequest.getPositiveFeedback());
-        interviewRecord.setNegativeFeedback(postInterviewRecordRequest.getNegativeFeedback());
-        interviewRecordRepository.save(interviewRecord);
-
-        // Fetch AllRequirements entities based on provided requirement names
-        List<AllRequirements> allRequirements = allRequirementsRepository.findByRequirementNameIn(
-                postInterviewRecordRequest.getFullfilledRequirements());
-
-        // Create and save FulfilledRequirements entity
-        FulfilledRequirements fulfilledRequirements = new FulfilledRequirements();
-        fulfilledRequirements.setInterviewRecordId(interviewRecord.getId());
-        fulfilledRequirements.setFulfilledRequirements(new HashSet<>(allRequirements));
-        fulfilledRequirementsRepository.save(fulfilledRequirements);
-
-        // Update corresponding Enrollment entity
-        Optional<Enrollment> optionalEnrollment = enrollmentRepository.findByCandidateIdAndJobId(
-                postInterviewRecordRequest.getCandidateId(),
-                postInterviewRecordRequest.getJobId());
-        if (optionalEnrollment.isPresent()) {
-            Enrollment enrollment = optionalEnrollment.get();
-            enrollment.setInterviewRecord(interviewRecord);
-            enrollmentRepository.save(enrollment);
+        // Ensure that requirements are fetched properly
+        Set<AllRequirements> requirements = presentJob.getAllRequirements();
+        List<String> req = new ArrayList<>();
+        for (AllRequirements it : requirements) {
+            req.add(it.getRequirementName()); // Make sure toString() method is properly implemented in AllRequirements
         }
-        return true;
+        jobdto.setRequirements(req);
+        jobdto.setRoleType(presentJob.getRoleType());
+
+        return Optional.of(jobdto);
+    } else {
+        return Optional.empty();
     }
+}
 
-    @Override
-    public InterviewRecordInfoDTO getInterviewRecord(Long interviewRecordId) {
-        InterviewRecord interviewRecord = interviewRecordRepository.findById(interviewRecordId)
-                .orElseThrow(() -> new RuntimeException("Interview record not found"));
-
-        Job job = interviewRecord.getJob();
-
-        List<String> fulfilledRequirements = fulfilledRequirementsRepository
-                .findByInterviewRecordId(interviewRecordId)
-                .stream()
-                .flatMap(fr -> fr.getFulfilledRequirements().stream())
-                .map(AllRequirements::getRequirementName)
-                .collect(Collectors.toList());
-
-        List<String> requirements = job.getAllRequirements()
-                .stream()
-                .map(AllRequirements::getRequirementName)
-                .collect(Collectors.toList());
-
-        return new InterviewRecordInfoDTO(
-                job.getId(),
-                job.getCompany(),
-                job.getJobDescription(),
-                requirements,
-                interviewRecord.getCandidateId(),
-                interviewRecord.getPositiveFeedback(),
-                interviewRecord.getNegativeFeedback(),
-                fulfilledRequirements
-        );
-    }
+//    @Override
+//    public boolean postInterviewRecord(PostInterviewRecordDTO postInterviewRecordRequest) {
+//        // Create and save InterviewRecord entity
+//        InterviewRecord interviewRecord = new InterviewRecord();
+//        interviewRecord.setCandidateId(postInterviewRecordRequest.getCandidateId());
+//        interviewRecord.setJob(jobRepository.findById(postInterviewRecordRequest.getJobId()).orElse(null));
+//        interviewRecord.setPositiveFeedback(postInterviewRecordRequest.getPositiveFeedback());
+//        interviewRecord.setNegativeFeedback(postInterviewRecordRequest.getNegativeFeedback());
+//        interviewRecordRepository.save(interviewRecord);
+//
+//        // Fetch AllRequirements entities based on provided requirement names
+//        List<AllRequirements> allRequirements = allRequirementsRepository.findByRequirementNameIn(
+//                postInterviewRecordRequest.getFullfilledRequirements());
+//
+//        // Create and save FulfilledRequirements entity
+//        FulfilledRequirements fulfilledRequirements = new FulfilledRequirements();
+//        fulfilledRequirements.setInterviewRecordId(interviewRecord.getId());
+//        fulfilledRequirements.setFulfilledRequirements(new HashSet<>(allRequirements));
+//        fulfilledRequirementsRepository.save(fulfilledRequirements);
+//
+//        // Update corresponding Enrollment entity
+//        Optional<Enrollment> optionalEnrollment = enrollmentRepository.findByCandidateIdAndJobId(
+//                postInterviewRecordRequest.getCandidateId(),
+//                postInterviewRecordRequest.getJobId());
+//        if (optionalEnrollment.isPresent()) {
+//            Enrollment enrollment = optionalEnrollment.get();
+//            enrollmentRepository.save(enrollment);
+//        }
+//        return true;
+//    }
+//
+//    @Override
+//    public InterviewRecordInfoDTO getInterviewRecord(Long interviewRecordId) {
+//        InterviewRecord interviewRecord = interviewRecordRepository.findById(interviewRecordId)
+//                .orElseThrow(() -> new RuntimeException("Interview record not found"));
+//
+//        Job job = interviewRecord.getJob();
+//
+//        List<String> fulfilledRequirements = fulfilledRequirementsRepository
+//                .findByInterviewRecordId(interviewRecordId)
+//                .stream()
+//                .flatMap(fr -> fr.getFulfilledRequirements().stream())
+//                .map(AllRequirements::getRequirementName)
+//                .collect(Collectors.toList());
+//
+//        List<String> requirements = job.getAllRequirements()
+//                .stream()
+//                .map(AllRequirements::getRequirementName)
+//                .collect(Collectors.toList());
+//
+//        return new InterviewRecordInfoDTO(
+//                job.getId(),
+//                job.getCompany(),
+//                job.getJobDescription(),
+//                requirements,
+//                interviewRecord.getCandidateId(),
+//                interviewRecord.getPositiveFeedback(),
+//                interviewRecord.getNegativeFeedback(),
+//                fulfilledRequirements
+//        );
+//    }
 
 }

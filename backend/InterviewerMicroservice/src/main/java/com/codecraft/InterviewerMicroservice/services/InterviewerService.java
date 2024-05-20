@@ -5,6 +5,7 @@ import com.codecraft.InterviewerMicroservice.entities.Enrollment;
 import com.codecraft.InterviewerMicroservice.entities.Job;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface InterviewerService {
     String login(String email, String password);
@@ -19,8 +20,9 @@ public interface InterviewerService {
     boolean enrollInJob(JobEnrollDTO jobEnrollRequest);
 
     boolean updateTestScore(UpdateTestScoreDTO updateTestScoreRequest);
+    Optional<JobForCandidateMicroserviceDTO> getJob(long id);
 
-    boolean postInterviewRecord(PostInterviewRecordDTO postInterviewRecordRequest);
+//    boolean postInterviewRecord(PostInterviewRecordDTO postInterviewRecordRequest);
 
-    InterviewRecordInfoDTO getInterviewRecord(Long interviewRecordId);
+//    InterviewRecordInfoDTO getInterviewRecord(Long interviewRecordId);
 }

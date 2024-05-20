@@ -17,9 +17,9 @@ public class InterviewRecord {
     private Long id;
     private Long candidateId;
 
-    @ManyToOne
-    @JoinColumn(name = "job_id")
-    private Job job;
+    @OneToOne
+    @JoinColumn(name = "enrollment_id")
+    private Enrollment enrollment;
 
     private String positiveFeedback;
     private String negativeFeedback;

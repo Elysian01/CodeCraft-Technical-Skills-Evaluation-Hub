@@ -1,7 +1,6 @@
 package com.codecraft.InterviewerMicroservice.controllers;
 
 import com.codecraft.InterviewerMicroservice.dto.*;
-import com.codecraft.InterviewerMicroservice.entities.Enrollment;
 import com.codecraft.InterviewerMicroservice.entities.Job;
 import com.codecraft.InterviewerMicroservice.services.InterviewerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
@@ -62,6 +62,16 @@ public class InterviewerController {
         }
     }
 
+    @GetMapping("/job/{id}")
+    public ResponseEntity<Optional<JobForCandidateMicroserviceDTO>> getJob(@PathVariable int id) {
+        Optional<JobForCandidateMicroserviceDTO> job = interviewerService.getJob(id);
+        if (!job.isEmpty()) {
+            return ResponseEntity.ok(job);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
     @PostMapping("/job/enroll")
     public ResponseEntity<String> enrollInJob(@RequestBody JobEnrollDTO jobEnrollRequest) {
         boolean status = interviewerService.enrollInJob(jobEnrollRequest);
@@ -92,24 +102,24 @@ public class InterviewerController {
         }
     }
 
-    @PostMapping("/job/interviewRecord")
-    public ResponseEntity<String> postInterviewRecord(@RequestBody PostInterviewRecordDTO postInterviewRecordRequest) {
-        boolean status = interviewerService.postInterviewRecord(postInterviewRecordRequest);
-        if (status) {
-            return ResponseEntity.ok("Interview Record Posted Successful");
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in Posting Interview Record");
-        }
-    }
+//    @PostMapping("/job/interviewRecord")
+//    public ResponseEntity<String> postInterviewRecord(@RequestBody PostInterviewRecordDTO postInterviewRecordRequest) {
+//        boolean status = interviewerService.postInterviewRecord(postInterviewRecordRequest);
+//        if (status) {
+//            return ResponseEntity.ok("Interview Record Posted Successful");
+//        } else {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in Posting Interview Record");
+//        }
+//    }
 
-    @GetMapping("/job/interviewRecord/{interviewRecordId}")
-    public ResponseEntity<InterviewRecordInfoDTO> getInterviewRecord(@PathVariable Long interviewRecordId) {
-        InterviewRecordInfoDTO info = interviewerService.getInterviewRecord(interviewRecordId);
-        if (info != null) {
-            return ResponseEntity.ok(info);
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-    }
+//    @GetMapping("/job/interviewRecord/{interviewRecordId}")
+//    public ResponseEntity<InterviewRecordInfoDTO> getInterviewRecord(@PathVariable Long interviewRecordId) {
+//        InterviewRecordInfoDTO info = interviewerService.getInterviewRecord(interviewRecordId);
+//        if (info != null) {
+//            return ResponseEntity.ok(info);
+//        } else {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+//        }
+//    }
 
 }

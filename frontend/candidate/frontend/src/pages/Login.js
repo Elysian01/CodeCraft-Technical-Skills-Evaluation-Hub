@@ -37,7 +37,11 @@ function Login() {
 
 	return (
 		<div>
-			<Navbar />
+			<div className="nav-heading">
+						<span>
+							CodeCraft Candidate App
+						</span>
+			</div>
 			<PageHeading title="Login" />
 			<div className="login">
 				<LoginBG />

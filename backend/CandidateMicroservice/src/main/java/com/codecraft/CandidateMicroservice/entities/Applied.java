@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Date;
+
 @Entity
 @Getter
 @Setter
@@ -21,7 +23,7 @@ public class Applied {
 
     private Integer jid;
     private String jobName;
-    private String testScore;
+    private Date interviewDate;
     private String appliedStatus; // success, pending, rejected
 }
 

@@ -5,7 +5,7 @@ import Table from "../components/tables/Table";
 import axios from "axios";
 
 function ViewJobs() {
-	const columns = ["Company Name", "Job Role", "Job Description", "Requirements", "Status"];
+	const columns = ["Company Name", "Job Role", "Job Description","Interview Date", "Status"];
 	
 	const [tableData, setTableData] = useState([]);
 	useEffect(() => {
@@ -30,9 +30,10 @@ function ViewJobs() {
 				columns={columns}
 				data={tableData.map(row => ({
 					"Company Name": row.jobName,
-					"Job Role": row.roleType,
+					"Job Role": row.jobRole,
 					"Job Description": row.jobDescription,
-					"Status": row.status
+					"Interview Date": row.interviewDate === null || row.interviewDate === 'null' ? "yet to decide" : row.interviewDate,
+					"Status": row.appliedStatus
 				}))}
 			/> 
 		</div>
