@@ -51,9 +51,9 @@ public class CandidateController {
         }
     }
 
-    @PatchMapping("/updateStatus/{id}")
-    public ResponseEntity<String> updateAppliedStatus(@PathVariable Integer id, @RequestBody UpdateAppliedJobStatusDTO request) {
-        boolean updated = candidateService.updateAppliedStatus(id, request.getAppliedStatus());
+    @PostMapping("/update-applied")
+    public ResponseEntity<String> updateAppliedJob(@RequestBody updateAppliedJobDTO updateAppliedJobDTO) {
+        boolean updated = candidateService.updateAppliedJob(updateAppliedJobDTO);
         if (updated) {
             return ResponseEntity.ok("Applied status updated successfully.");
         } else {

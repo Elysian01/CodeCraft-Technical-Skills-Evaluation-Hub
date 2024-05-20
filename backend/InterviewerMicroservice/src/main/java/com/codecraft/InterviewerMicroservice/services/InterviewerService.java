@@ -16,6 +16,7 @@ public interface InterviewerService {
     List<JobInfoDTO> getJobs(int id);
 
     List<JobEnrollmentInfoDTO> getJobEnrollments(Long jobId);
+    public void scheduleInterview(ScheduleInterviewDTO dto);
 
     boolean enrollInJob(JobEnrollDTO jobEnrollRequest);
 

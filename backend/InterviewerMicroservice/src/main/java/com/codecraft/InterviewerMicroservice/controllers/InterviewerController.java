@@ -39,6 +39,13 @@ public class InterviewerController {
 
     }
 
+    @PostMapping("/scheduleInterview")
+    public void scheduleInterview(@RequestBody ScheduleInterviewDTO ScheduleInterviewDTO){
+        System.out.println(true);
+        System.out.println(ScheduleInterviewDTO.getInterviewDate());
+        interviewerService.scheduleInterview(ScheduleInterviewDTO);
+    }
+
     @PostMapping("/createJob")
     public ResponseEntity<String> createJob(@RequestBody JobPostingDTO jobPostingRequest) {
         System.out.println(jobPostingRequest);

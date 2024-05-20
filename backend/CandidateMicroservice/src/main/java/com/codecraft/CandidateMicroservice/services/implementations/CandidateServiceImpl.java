@@ -1,9 +1,6 @@
 package com.codecraft.CandidateMicroservice.services.implementations;
 
-import com.codecraft.CandidateMicroservice.dto.AppliedJobDTO;
-import com.codecraft.CandidateMicroservice.dto.JobApplyDTO;
-import com.codecraft.CandidateMicroservice.dto.JobEnrollDTO;
-import com.codecraft.CandidateMicroservice.dto.JobForCandidateMicroserviceDTO;
+import com.codecraft.CandidateMicroservice.dto.*;
 import com.codecraft.CandidateMicroservice.entities.Applied;
 import com.codecraft.CandidateMicroservice.entities.Candidate;
 import com.codecraft.CandidateMicroservice.repository.AppliedRepository;
@@ -16,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -94,11 +92,15 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public boolean updateAppliedStatus(Integer id, String appliedStatus) {
-        Optional<Applied> appliedOptional = appliedRepository.findById(id);
+    public boolean updateAppliedJob(updateAppliedJobDTO updateAppliedJobDTO) {
+        int cid = updateAppliedJobDTO.getCid();
+        int jid = updateAppliedJobDTO.getJid();
+        Date InterviewDate = updateAppliedJobDTO.getInterviewDate();
+        Optional<Applied> appliedOptional = appliedRepository.findByCandidateIdAndAndJid(cid, jid);
         if (appliedOptional.isPresent()) {
             Applied applied = appliedOptional.get();
-            applied.setAppliedStatus(appliedStatus);
+            applied.setAppliedStatus("Interview Scheduled");
+            applied.setInterviewDate(InterviewDate);
             appliedRepository.save(applied);
             return true;
         }

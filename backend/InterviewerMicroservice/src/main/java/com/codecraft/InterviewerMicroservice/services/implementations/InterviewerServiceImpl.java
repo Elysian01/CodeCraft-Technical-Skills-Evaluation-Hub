@@ -3,6 +3,8 @@ package com.codecraft.InterviewerMicroservice.services.implementations;
 import com.codecraft.InterviewerMicroservice.dto.*;
 import com.codecraft.InterviewerMicroservice.entities.*;
 import com.codecraft.InterviewerMicroservice.repository.*;
+
+import com.codecraft.InterviewerMicroservice.services.CandidateClient;
 import com.codecraft.InterviewerMicroservice.services.InterviewerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class InterviewerServiceImpl implements InterviewerService {
+    private CandidateClient candidateClient;
+    public InterviewerServiceImpl(CandidateClient candidateClient) {
+        this.candidateClient = candidateClient;}
 
     @Autowired
     InterviewerRepository interviewerRepository;
@@ -31,8 +36,24 @@ public class InterviewerServiceImpl implements InterviewerService {
     @Autowired
     private InterviewRecordRepository interviewRecordRepository;
 
+
 //    @Autowired
 //    private FulfilledRequirementsRepository fulfilledRequirementsRepository;
+
+    private String generateString() {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = 0; i < 9; i++) {
+            if (i > 0 && i % 3 == 0) {
+                stringBuilder.append("-");
+            }
+            // generate a random character
+            char randomChar = (char) ('a' + Math.random() * ('z' - 'a' + 1));
+            stringBuilder.append(randomChar);
+        }
+
+        return stringBuilder.toString();
+    }
 
     public String login(String email, String password) {
         Interviewer candidate = interviewerRepository.findByEmail(email);
@@ -50,7 +71,6 @@ public class InterviewerServiceImpl implements InterviewerService {
     }
     @Override
     public List<Job> allactiveJobsCount(){
-
         return jobRepository.findAllByStatus("open");
     }
 
@@ -137,13 +157,15 @@ public class InterviewerServiceImpl implements InterviewerService {
     }
 
     private JobEnrollmentInfoDTO mapToJobEnrollmentInfoDTO(Enrollment enrollment) {
-        return new JobEnrollmentInfoDTO(
-                enrollment.getCandidateId(),
-                enrollment.getCandidateName(),
-                enrollment.getTestScore(),
-                enrollment.getJob().getId()
-                //enrollment.getInterviewRecord() != null ? enrollment.getInterviewRecord().getId() : null
-        );
+        JobEnrollmentInfoDTO jobEnrollmentInfoDTO = new JobEnrollmentInfoDTO();
+        jobEnrollmentInfoDTO.setCandidateId(enrollment.getCandidateId());
+        jobEnrollmentInfoDTO.setCandidateName(enrollment.getCandidateName());
+        jobEnrollmentInfoDTO.setInterviewDate(enrollment.getInterviewDate());
+        jobEnrollmentInfoDTO.setRoomId(enrollment.getRoom_id());
+// jobEnrollmentInfoDTO.setTestScore(enrollment.getTestScore()); // Assuming this setter exists if uncommenting
+        jobEnrollmentInfoDTO.setEnrollId(enrollment.getId());
+//        jobEnrollmentInfoDTO.setInterviewRecordId(enrollment.getInterviewRecord() != null ? enrollment.getInterviewRecord().getId() : null);
+return jobEnrollmentInfoDTO;
     }
 
     @Override
@@ -153,7 +175,21 @@ public class InterviewerServiceImpl implements InterviewerService {
                 .map(this::mapToJobEnrollmentInfoDTO)
                 .collect(Collectors.toList());
     }
+@Override
+    public void scheduleInterview(ScheduleInterviewDTO dto) {
+        Optional<Enrollment> enrollment = enrollmentRepository.findById(dto.getEnrollId());
+        Enrollment enrollmentDate = enrollment.get();
+        enrollmentDate.setInterviewDate(dto.getInterviewDate());
+        enrollmentDate.setRoom_id(generateString());
+        enrollmentRepository.save(enrollmentDate);
 
+        updateAppliedJobDTO updateAppliedJobDTO = new updateAppliedJobDTO();
+        updateAppliedJobDTO.setCid(enrollmentDate.getCandidateId());
+        updateAppliedJobDTO.setJid(enrollmentDate.getJob().getId());
+        updateAppliedJobDTO.setInterviewDate(dto.getInterviewDate());
+        candidateClient.updateAppliedJob(updateAppliedJobDTO);
+
+    }
     @Override
     public boolean enrollInJob(JobEnrollDTO jobEnrollRequest) {
         try {
@@ -194,7 +230,7 @@ public class InterviewerServiceImpl implements InterviewerService {
             if (optionalEnrollment.isPresent()) {
                 Enrollment enrollment = optionalEnrollment.get();
                 // Update the test score
-                enrollment.setTestScore(updateTestScoreRequest.getTestScore());
+               // enrollment.setTestScore(updateTestScoreRequest.getTestScore());
 
                 // Save the updated enrollment record
                 enrollmentRepository.save(enrollment);

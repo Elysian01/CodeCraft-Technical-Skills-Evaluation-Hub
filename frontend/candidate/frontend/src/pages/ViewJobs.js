@@ -18,7 +18,7 @@ function ViewJobs() {
     const handleViewClick = async (id, company, candidateId) => {
         try {
             const dto = JobApplyDTO(id, company, candidateId);
-            await axios.post("http://localhost:8082/candidate/apply", dto);
+            await axios.post("http://localhost:8000/candidate/apply", dto);
             console.log('Job application submitted:', dto);
             // After applying, fetch the updated list of applied jobs and update the table
             fetchAppliedJobs();
@@ -32,7 +32,7 @@ function ViewJobs() {
 
     const fetchAppliedJobs = async () => {
         try {
-            const appliedJobsResponse = await axios.get(`http://localhost:8082/candidate/appliedJobs/${localStorage.getItem("candidateId")}`);
+            const appliedJobsResponse = await axios.get(`http://localhost:8000/candidate/appliedJobs/${localStorage.getItem("candidateId")}`);
             const appliedJobs = appliedJobsResponse.data;
 
             // Mark applied jobs in the table data
@@ -66,11 +66,11 @@ function ViewJobs() {
         const fetchData = async () => {
             try {
                 // Fetch all active jobs
-                const allJobsResponse = await axios.get("http://localhost:8081/interviewer/all-active-jobs");
+                const allJobsResponse = await axios.get("http://localhost:8000/interviewer/all-active-jobs");
                 const allJobs = allJobsResponse.data;
 
                 // Fetch applied jobs
-                const appliedJobsResponse = await axios.get(`http://localhost:8082/candidate/appliedJobs/${localStorage.getItem("candidateId")}`);
+                const appliedJobsResponse = await axios.get(`http://localhost:8000/candidate/appliedJobs/${localStorage.getItem("candidateId")}`);
                 const appliedJobs = appliedJobsResponse.data;
 
                 // Mark applied jobs in the table data

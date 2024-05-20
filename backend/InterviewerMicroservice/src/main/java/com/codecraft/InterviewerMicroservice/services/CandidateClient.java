@@ -1,10 +1,10 @@
 package com.codecraft.InterviewerMicroservice.services;
 
 import com.codecraft.InterviewerMicroservice.dto.AppliedJobDTO;
+import com.codecraft.InterviewerMicroservice.dto.updateAppliedJobDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -12,4 +12,7 @@ import java.util.List;
 public interface CandidateClient {
     @GetMapping("/appliedJobs/{id}")
     ResponseEntity<List<AppliedJobDTO>> listOfAppliedJobs(@PathVariable Integer id);
+    @PostMapping("/candidate/update-applied")
+     ResponseEntity<String> updateAppliedJob(@RequestBody updateAppliedJobDTO updateAppliedJobDTO) ;
+
 }

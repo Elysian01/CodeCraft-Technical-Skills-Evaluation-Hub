@@ -12,7 +12,7 @@ function ViewJobs() {
 		const fetchData = async () => {
 			try {
 				const id = parseInt(localStorage.getItem("candidateId"))
-				const response = await axios.get(`http://localhost:8082/candidate/appliedJobs/${id}`);
+				const response = await axios.get(`http://localhost:8000/candidate/appliedJobs/${id}`);
 				setTableData(response.data); // Assuming response.data is an array of data for the table
 			} catch (error) {
 				console.error('Error fetching data:', error);

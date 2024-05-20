@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Date;
+
 @Entity
 @Getter
 @Setter
@@ -18,8 +20,8 @@ public class Enrollment {
 
     private Long candidateId;
     private String candidateName;
-    private String testScore;
-
+    private Date interviewDate=null;
+    private String room_id = "";
     @ManyToOne
     @JoinColumn(name = "job_id")
     private Job job;

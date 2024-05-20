@@ -3,12 +3,10 @@ package com.codecraft.CandidateMicroservice.services;
 import com.codecraft.CandidateMicroservice.dto.JobEnrollDTO;
 
 import com.codecraft.CandidateMicroservice.dto.JobForCandidateMicroserviceDTO;
+import com.codecraft.CandidateMicroservice.dto.updateAppliedJobDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -18,4 +16,5 @@ public interface InterviewerClient {
     public ResponseEntity<Optional<JobForCandidateMicroserviceDTO>> getJob(@PathVariable int id);
     @PostMapping("/interviewer/job/enroll")
     ResponseEntity<String> enrollInJob(@RequestBody JobEnrollDTO jobEnrollRequest);
+
 }
