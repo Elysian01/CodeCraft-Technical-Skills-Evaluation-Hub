@@ -59,7 +59,7 @@
 }
 
 .nav-heading>span:hover {
-    color: var(--primary-hover);
+    color: #ddd;
 }
 
 
