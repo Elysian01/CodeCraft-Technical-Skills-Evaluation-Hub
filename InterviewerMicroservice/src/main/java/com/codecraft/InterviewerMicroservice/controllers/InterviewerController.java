@@ -14,12 +14,13 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
-    @RequestMapping("/interviewer")
+@RequestMapping("/interviewer")
 public class InterviewerController {
 
     @Autowired
     private InterviewerService interviewerService;
 
+    // Method for interviewer to login with email and password
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequestDTO loginRequest) {
         String token = interviewerService.login(loginRequest.getEmail(), loginRequest.getPassword());
@@ -47,6 +48,7 @@ public class InterviewerController {
         interviewerService.scheduleInterview(ScheduleInterviewDTO);
     }
 
+    // Method to create job
     @PostMapping("/createJob")
     public ResponseEntity<String> createJob(@RequestBody JobPostingDTO jobPostingRequest) {
         System.out.println(jobPostingRequest);
@@ -60,6 +62,7 @@ public class InterviewerController {
         }
     }
 
+    // Method to get all the open jobs created by an interviewer
     @GetMapping("/jobs/{id}")
     public ResponseEntity<List<JobInfoDTO>> getJobs(@PathVariable int id) {
         List<JobInfoDTO> jobs = interviewerService.getJobs(id);
@@ -80,6 +83,7 @@ public class InterviewerController {
         }
     }
 
+    // Method for a candidate to enroll in a job
     @PostMapping("/job/enroll")
     public ResponseEntity<String> enrollInJob(@RequestBody JobEnrollDTO jobEnrollRequest) {
         boolean status = interviewerService.enrollInJob(jobEnrollRequest);
@@ -90,6 +94,8 @@ public class InterviewerController {
         }
     }
 
+
+    // Given a job-id the below method will fetch all the enrollments done by candidate on this job
     @GetMapping("/jobEnrollments/{jobId}")
     public ResponseEntity<List<JobEnrollmentInfoDTO>> getJobEnrollments(@PathVariable Long jobId) {
         List<JobEnrollmentInfoDTO> jobs = interviewerService.getJobEnrollments(jobId);
@@ -100,6 +106,7 @@ public class InterviewerController {
         }
     }
 
+    // update the test-score given candidate-id and job-id
     @PostMapping("/job/updateTestScore")
     public ResponseEntity<String> updateTestScore(@RequestBody UpdateTestScoreDTO updateTestScoreRequest) {
         boolean status = interviewerService.updateTestScore(updateTestScoreRequest);

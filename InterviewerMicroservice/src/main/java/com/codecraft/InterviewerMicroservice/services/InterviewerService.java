@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface InterviewerService {
     String login(String email, String password);
     int activeJobsCount(int id);
-     List<Job> allactiveJobsCount();
+    List<Job> allactiveJobsCount();
     String createJob(JobPostingDTO jobPostingRequest);
 
     List<JobInfoDTO> getJobs(int id);
@@ -23,7 +23,7 @@ public interface InterviewerService {
 
     boolean updateTestScore(UpdateTestScoreDTO updateTestScoreRequest);
     Optional<JobForCandidateMicroserviceDTO> getJob(long id);
-     boolean candidateCodeEditorCheck(CandidateCheckDTO CandidateCheckDTO);
+    boolean candidateCodeEditorCheck(CandidateCheckDTO CandidateCheckDTO);
     boolean interviewerCodeEditorCheck(String interviewerEmail);
     InterviewRecord checkResults(int enrollId);
 

@@ -1,4 +1,4 @@
-package com.codecraft.CandidateMicroservice.services.implementations;
+package com.codecraft.CandidateMicroservice.services;
 
 import com.codecraft.CandidateMicroservice.dto.*;
 import com.codecraft.CandidateMicroservice.entities.Applied;
