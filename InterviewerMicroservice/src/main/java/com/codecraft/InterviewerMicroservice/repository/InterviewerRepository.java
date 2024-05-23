@@ -8,5 +8,4 @@ import org.springframework.stereotype.Repository;
 public interface InterviewerRepository extends JpaRepository<Interviewer, Integer> {
     Interviewer findByEmail(String email);
 
-
 }

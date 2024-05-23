@@ -13,7 +13,8 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/interviewer")
+@CrossOrigin("*")
+    @RequestMapping("/interviewer")
 public class InterviewerController {
 
     @Autowired
