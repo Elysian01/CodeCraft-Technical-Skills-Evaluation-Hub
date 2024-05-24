@@ -23,7 +23,7 @@ public class EnrollmentRepositoryTest {
     private EnrollmentRepository enrollmentRepository;
 
     @Test
-    public void findByCandidateIdAndJobId() {
+    public void findByCandidateIdAndJobIdTest() {
         // Given
         Long candidateId = 1L;
         Job job = new Job();
@@ -47,7 +47,7 @@ public class EnrollmentRepositoryTest {
     }
 
     @Test
-    public void findById(){
+    public void findByIdTest(){
         // Given
         Enrollment enrollment = new Enrollment();
         entityManager.persistAndFlush(enrollment);
