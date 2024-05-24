@@ -31,7 +31,7 @@ public class CandidateController {
 
     // candidate applying for a job
     @PostMapping("/apply")
-    public ResponseEntity<String> login(@RequestBody JobApplyDTO jobRequest) {
+    public ResponseEntity<String> applyJob(@RequestBody JobApplyDTO jobRequest) {
         System.out.println(jobRequest);
         String token = candidateService.applyJob(jobRequest);
         if (token != null) {
