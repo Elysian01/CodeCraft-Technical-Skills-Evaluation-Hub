@@ -33,6 +33,7 @@ CMD ["node", "server.js;"]
 
 # Expose port 8083
 EXPOSE 80
+EXPOSE 5000
 
 # Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
