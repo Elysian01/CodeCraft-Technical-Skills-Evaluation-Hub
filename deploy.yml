@@ -1,0 +1,10 @@
+- name: Run Docker Compose
+  hosts: localhost
+  remote_user: aakash
+  connection: local
+  gather_facts: no
+  tasks:
+    - name: Run Docker Compose
+      command: docker compose up -d
+      args:
+        chdir: /var/lib/jenkins/workspace/CodeCraft

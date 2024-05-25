@@ -23,7 +23,7 @@ public class JobPostingDTO {
     private String roleType;
     private int interviewerId;
     private int experience;
-    private Set<String> requirements = new HashSet<>();;
+    private Set<String> requirements = new HashSet<>();
 }
 
 

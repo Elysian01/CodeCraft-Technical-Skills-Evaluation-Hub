@@ -10,7 +10,6 @@ const Home = () => {
 
 	const [roomId, setRoomId] = useState("");
 	const [username, setUsername] = useState("");
-	const [candidateName, setCandidateName] = useState("");
 	const [error, setError] = useState("");
 	const [interviewer, setInterviewer] = useState(false);
 
@@ -26,17 +25,18 @@ const Home = () => {
 			toast.error("ROOM ID & username is required");
 			return;
 		}
-		
-		setCandidateName(username);
+		localStorage.setItem("roomId", roomId);
+		localStorage.setItem("candidateName", username);
 
 		if (!interviewer) {
 			// enroll check
 			try {
-				const response = await axios.post('http://localhost:8000/interviewer/code-sync-candidate-check', {
-					roomId,
-					candidateName: username,
-				});
-				
+				const response = await axios.post(`http://localhost:8000/interviewer/code-sync-candidate-check/${username}`, roomId, {
+    headers: {
+        'Content-Type': 'text/plain'
+    }
+});
+
 				// If the login is successful, navigate to the editor
 				if (response.data === true) {
 					navigate(`/editor/${roomId}`, {
@@ -55,10 +55,9 @@ const Home = () => {
 				toast.error('Failed to login. Please try again.');
 			}
 		} else {
-			try{
-			const response = await axios.post(`http://localhost:8000/interviewer/code-sync-interviewer-check/${username}`, {
+			try {
+				const response = await axios.post(`http://localhost:8000/interviewer/code-sync-interviewer-check/${username}`, {
 					roomId,
-					candidateName: username,
 				});			
 				if (response.data === true) {
 					navigate(`/editor/${roomId}`, {
@@ -67,8 +66,7 @@ const Home = () => {
 							interviewer,
 						},
 					});
-				}
-				else {
+				} else {
 					setError('Invalid login credentials');
 					toast.error('Invalid login credentials');
 				}

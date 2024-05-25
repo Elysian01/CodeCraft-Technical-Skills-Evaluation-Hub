@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.context.TestPropertySource;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -94,11 +93,17 @@ public class JobRepositoryTest {
         assertEquals(2, foundJobs.size());
         assertEquals("ABC Corp", foundJobs.get(0).getCompany());
         assertEquals("XYZ Inc", foundJobs.get(1).getCompany());
+
+        System.out.println("------------------ findByInterviewerIdTest Repository Test Successfully Ran -----------------");
+
     }
 
     @Test
     public void countAllByInterviewerIdTest() {
         int jobCount = jobRepository.countAllByInterviewerId(interviewer.getId());
         assertEquals(2, jobCount);
+
+        System.out.println("------------------ countAllByInterviewerIdTest Repository Test Successfully Ran -----------------");
+
     }
 }

@@ -43,8 +43,8 @@ public class InterviewerServiceImpl implements InterviewerService {
     private String generateString() {
         StringBuilder stringBuilder = new StringBuilder();
 
-        for (int i = 0; i < 9; i++) {
-            if (i > 0 && i % 3 == 0) {
+        for (int i = 0; i < 16; i++) {
+            if (i > 0 && i % 4 == 0) {
                 stringBuilder.append("-");
             }
             // generate a random character
@@ -162,11 +162,20 @@ public class InterviewerServiceImpl implements InterviewerService {
     }
 
 
-
+@Override
     public List<JobInfoDTO> getJobs(int id) {
         List<Job> jobs = jobRepository.findByInterviewerId(id);
         return jobs.stream()
                 .filter(job -> job.getStatus().equals("open"))
+                .map(this::mapJobToJobInfoDTO)
+                .collect(Collectors.toList());
+
+    }
+@Override
+    public List<JobInfoDTO> getClosedJobs(int id) {
+        List<Job> jobs = jobRepository.findByInterviewerId(id);
+        return jobs.stream()
+                .filter(job -> job.getStatus().equals("Closed"))
                 .map(this::mapJobToJobInfoDTO)
                 .collect(Collectors.toList());
 
@@ -216,7 +225,13 @@ return jobEnrollmentInfoDTO;
         updateAppliedJobDTO.setJid(enrollmentDate.getJob().getId());
         updateAppliedJobDTO.setInterviewDate(dto.getInterviewDate());
         candidateClient.updateAppliedJob(updateAppliedJobDTO);
+    }
+    public CountDTO counter(int InterviewerId){
+        CountDTO dto = new CountDTO();
+        dto.setActiveJobs(jobRepository.findAllByStatus("open").size());
+        dto.setClosedJobs(jobRepository.findAllByStatus("closed").size());
 
+        return dto;
     }
     @Override
     public boolean enrollInJob(JobEnrollDTO jobEnrollRequest) {
@@ -294,7 +309,25 @@ public Optional<JobForCandidateMicroserviceDTO> getJob(long id) {
         return Optional.empty();
     }
 }
+@Override
+public void interviewResult(InterviewRecordInfoDTO dto){
+    List<Enrollment> enroll = enrollmentRepository.findByRoomId(dto.getRoomId());
+    if(enroll!=null && enroll.size()==1){
+        InterviewRecord result = new InterviewRecord();
+        result.setCandidateId(enroll.get(0).getCandidateId());
+        result.setEnrollment(enroll.get(0));
+        result.setPositiveFeedback(dto.getPositiveFeedback());
+        result.setNegativeFeedback(dto.getNegativeFeedback());
+        interviewRecordRepository.save(result);
+        }
+    }
+@Override
+    public void closeJob(int jobId){
+        Job job = jobRepository.findById((long) jobId).get();
+        job.setStatus("Closed");
+        jobRepository.save(job);
 
+    }
 //    @Override
 //    public boolean postInterviewRecord(PostInterviewRecordDTO postInterviewRecordRequest) {
 //        // Create and save InterviewRecord entity

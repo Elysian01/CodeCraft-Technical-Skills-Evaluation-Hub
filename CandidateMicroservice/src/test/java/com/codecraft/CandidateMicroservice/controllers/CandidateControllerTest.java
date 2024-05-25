@@ -18,8 +18,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -28,7 +28,6 @@ public class CandidateControllerTest {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
-
     private MockMvc mockMvc;
 
     @MockBean
@@ -57,6 +56,8 @@ public class CandidateControllerTest {
                         .content(jobApplyJson))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Job application successful"));
+
+        System.out.println("------------------ applyJobTest Controller Successfully Ran -----------------");
     }
 
     @Test
@@ -80,5 +81,7 @@ public class CandidateControllerTest {
         mockMvc.perform(get("/candidate/appliedJobs/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(appliedJobDTOList)));
+
+        System.out.println("------------------ listOfAppliedJobsTest Controller Successfully Ran -----------------");
     }
 }

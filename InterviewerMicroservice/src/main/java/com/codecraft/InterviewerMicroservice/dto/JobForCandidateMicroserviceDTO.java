@@ -9,5 +9,5 @@ import java.util.List;
 public class JobForCandidateMicroserviceDTO {
 private String roleType;
 private String jobDescription;
-private List<String> requirements  = new ArrayList<>();;
+private List<String> requirements = new ArrayList<>();
 }

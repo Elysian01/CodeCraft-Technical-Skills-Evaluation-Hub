@@ -1,16 +1,16 @@
-package com.codecraft.InterviewerMicroservice.services.implementations;
+package com.codecraft.InterviewerMicroservice.implementations;
 
+import com.codecraft.InterviewerMicroservice.dto.JobEnrollDTO;
 import com.codecraft.InterviewerMicroservice.dto.JobEnrollmentInfoDTO;
 import com.codecraft.InterviewerMicroservice.dto.JobPostingDTO;
-import com.codecraft.InterviewerMicroservice.dto.JobEnrollDTO;
 import com.codecraft.InterviewerMicroservice.entities.Enrollment;
 import com.codecraft.InterviewerMicroservice.entities.Interviewer;
 import com.codecraft.InterviewerMicroservice.entities.Job;
 import com.codecraft.InterviewerMicroservice.repository.EnrollmentRepository;
 import com.codecraft.InterviewerMicroservice.repository.InterviewerRepository;
 import com.codecraft.InterviewerMicroservice.repository.JobRepository;
+import com.codecraft.InterviewerMicroservice.services.implementations.InterviewerServiceImpl;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -60,6 +60,9 @@ public class InterviewerServiceImplTest {
 
         // Then
         assertEquals("Job created successfully", result);
+
+        System.out.println("------------------ createJobTest Service Test Successfully Ran -----------------");
+
     }
 
     @Test
@@ -80,6 +83,9 @@ public class InterviewerServiceImplTest {
         // Then
         assertNotNull(result);
         assertEquals(2, result.size());
+
+        System.out.println("------------------ getJobEnrollmentsTest Service Test Successfully Ran -----------------");
+
     }
 
 
@@ -110,5 +116,8 @@ public class InterviewerServiceImplTest {
 
         // Then
         assertTrue(enrollmentResult);
+
+        System.out.println("------------------ enrollInJob Service Test Successfully Ran -----------------");
+
     }
 }

@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 
 services:
   eurekaregistry:
@@ -31,6 +31,8 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://codecraft_db:3306/codecraft?createDatabaseIfNotExist=true
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
+      - LOGGING_LOGSTASH_HOST=logstash
+      - LOGGING_LOGSTASH_PORT=5001
     networks:
       - codecraft-network
     depends_on:
@@ -88,8 +90,69 @@ services:
     networks:
       - codecraft-network
 
+  codeeditorfrontend:
+    image: aakashbhardwaj1/codeeditorfrontend
+    container_name: codeeditorfrontend
+    ports:
+      - "3002:80"
+    networks:
+      - codecraft-network
+  codeeditorbackend:
+    image: aakashbhardwaj1/codeeditorbackend
+    container_name: codeeditorbackend
+    ports:
+      - "5000:5000"
+    networks:
+      - codecraft-network
+  
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.3.3
+    container_name: elastic
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xms512m"
+      - "discovery.type=single-node"
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    volumes:
+      - elastic_data:/usr/share/elasticsearch/data
+    networks:
+      - codecraft-network
+  
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.3.3
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    networks:
+      - codecraft-network
+
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.3.3
+    container_name: logstash
+    volumes:
+      - /home/aakash/MySPE/CodeCraft/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - /home/aakash/MySPE/CodeCraft/logstash/pipeline:/usr/share/logstash/pipeline:ro
+    ports:
+      - "5001:5001/tcp"
+      - "5001:5001/udp"
+      - "9600:9600"
+    environment:
+      - LS_JAVA_OPTS=-Xmx512m -Xms512m
+    networks:
+      - codecraft-network
+    depends_on:
+      - elasticsearch
 volumes:
   codecraft_db:
+  elastic_data:
     driver: local
 
 networks:

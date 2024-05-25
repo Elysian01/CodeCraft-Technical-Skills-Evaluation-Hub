@@ -1,4 +1,4 @@
-package com.codecraft.CandidateMicroservice.services.implementations;
+package com.codecraft.CandidateMicroservice.implementations;
 
 import com.codecraft.CandidateMicroservice.dto.JobApplyDTO;
 import com.codecraft.CandidateMicroservice.dto.JobEnrollDTO;
@@ -6,13 +6,9 @@ import com.codecraft.CandidateMicroservice.entities.Applied;
 import com.codecraft.CandidateMicroservice.entities.Candidate;
 import com.codecraft.CandidateMicroservice.repository.AppliedRepository;
 import com.codecraft.CandidateMicroservice.repository.CandidateRepository;
-import com.codecraft.CandidateMicroservice.services.CandidateServiceImpl;
 import com.codecraft.CandidateMicroservice.services.InterviewerClient;
-import org.junit.jupiter.api.BeforeEach;
+import com.codecraft.CandidateMicroservice.services.implementations.CandidateServiceImpl;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -70,5 +66,7 @@ public class CandidateServiceImplTest {
         verify(candidateRepository, times(1)).findById(1);
         verify(appliedRepository, times(1)).save(any(Applied.class));
         verify(interviewerClient, times(1)).enrollInJob(any(JobEnrollDTO.class));
+
+        System.out.println("------------------ applyJobTest Service Successfully Ran -----------------");
     }
 }

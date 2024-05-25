@@ -18,10 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class EnrollmentRepositoryTest {
     @Autowired
     private TestEntityManager entityManager;
-
     @Autowired
     private EnrollmentRepository enrollmentRepository;
-
     @Test
     public void findByCandidateIdAndJobIdTest() {
         // Given
@@ -44,6 +42,9 @@ public class EnrollmentRepositoryTest {
         assertTrue(foundEnrollment.isPresent());
         assertEquals(candidateId, foundEnrollment.get().getCandidateId());
         assertEquals(job.getId(), foundEnrollment.get().getJob().getId());
+
+        System.out.println("------------------ findByCandidateIdAndJobIdTest Repository Test Successfully Ran -----------------");
+
     }
 
     @Test
@@ -58,5 +59,8 @@ public class EnrollmentRepositoryTest {
         // Then
         assertTrue(foundEnrollment.isPresent());
         assertEquals(enrollment.getId(), foundEnrollment.get().getId());
+
+        System.out.println("------------------ findByIdTest Repository Test Successfully Ran -----------------");
+
     }
 }

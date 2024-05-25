@@ -1,0 +1,22 @@
+# Use the official Node.js  LTS (Long Term Support) image as base
+FROM node:lts-alpine
+
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY CodeEditorBackend/package.json ../CodeEditorBackend/package-lock.json ./
+
+
+
+# Install dependencies
+RUN npm install --legacy-peer-deps
+
+# Copy server.js from your local directory into the container
+COPY CodeEditorBackend/server.js ./
+
+# Expose port 5000 to the outside world
+EXPOSE 5000
+
+# Command to run the application
+CMD ["node", "server.js"]
+

@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-@CrossOrigin("*")
+
 @RestController
 @RequestMapping("/candidate")
 public class CandidateController {
@@ -16,7 +16,6 @@ public class CandidateController {
     @Autowired
     private CandidateService candidateService;
 
-    // Method for candidate to login with email and password
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequestDTO loginRequest) {
         String token = candidateService.login(loginRequest.getEmail(), loginRequest.getPassword());
@@ -31,7 +30,7 @@ public class CandidateController {
 
     // candidate applying for a job
     @PostMapping("/apply")
-    public ResponseEntity<String> applyJob(@RequestBody JobApplyDTO jobRequest) {
+    public ResponseEntity<String> login(@RequestBody JobApplyDTO jobRequest) {
         System.out.println(jobRequest);
         String token = candidateService.applyJob(jobRequest);
         if (token != null) {
@@ -62,7 +61,6 @@ public class CandidateController {
         }
     }
 
-    // update the test-score given candidate-id and job-id
     @PatchMapping("/updateTestScore/{id}")
     public ResponseEntity<String> updateTestScore(@PathVariable Integer id, @RequestBody UpdateTestScoreDTO request) {
         boolean updated = candidateService.updateTestScore(id, request.getTestScore());

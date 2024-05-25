@@ -21,7 +21,8 @@ const ViewEnrollments = () => {
   };
   
   const ViewInterviewHandler = (jobId, roomId) => {
-    alert(jobId + roomId);
+    alert( 'Room ID: '+roomId+' Date:' + jobId);
+
   };
 
   const seeResultHandler= (enrollId)=>{
@@ -40,6 +41,12 @@ const ViewEnrollments = () => {
 
     fetchData();
   }, [id, rerender]);
+
+  const closeJob = async()=>{
+    
+  await axios.post(`${BASE_URL}/interviewer/close-job/${id}`);
+  alert("Job opening closed");
+  }
 
   const handleDateSubmit = async (selectedDate) => {
     try {
@@ -70,7 +77,7 @@ const ViewEnrollments = () => {
           <h2 className="text-xl text-white mb-4 text-center">Enrolled Candidates</h2>
         </div>
         <div>
-          <button className="bg-blue-500 text-white text-m px-6 py-3 rounded-xl">Close Job Opening</button>
+          <button className="bg-blue-500 text-white text-m px-6 py-3 rounded-xl" onClick={closeJob}>Close Job Opening</button>
         </div>
       </div>
       <div>
@@ -79,8 +86,7 @@ const ViewEnrollments = () => {
           <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-900 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-4 py-3">Candidate Name</th>
-              <th scope="col" className="px-4 py-3">OA Score</th>
-              <th scope="col" className="px-4 py-3">Job ID</th>
+              <th scope="col" className="px-4 py-3">Interview Date</th>
               <th scope="col" className="px-4 py-3">Action</th>
               <th scope="col" className="px-4 py-3">Result</th>
             </tr>
@@ -92,11 +98,9 @@ const ViewEnrollments = () => {
                   {job.candidateName}
                 </td>
                 <td className="px-6 py-4">
-                  not implemented
+                  {job.interviewDate ? job.interviewDate : "Interview Date Not Available"}
                 </td>
-                <td className="px-6 py-4">
-                  {job.enrollId}
-                </td>
+
                 <td className="px-6 py-4">
                   {job.interviewDate ? (
                     <span className="text-xs bg-green-200 text-green-800 rounded-full px-2 py-1" onClick={() => ViewInterviewHandler(job.interviewDate,job.roomId)}>
