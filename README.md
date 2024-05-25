@@ -10,7 +10,7 @@ The development of "CodeCraft: Technical Skills Evaluation Hub" aims to create a
 ## Microservices (Backend (SpringBoot))
 
 1. [API Gateway Microservice](./APIGatewayMicroservice/)
-2. [Service Registry](./ServiceRegistryMicroservice/)
+2. [Service Registry Microservice](./ServiceRegistryMicroservice/)
 3. [Interviewer Backend Microservice](./InterviewerMicroservice/)
 4. [Candidate Backend Microservice](./CandidateMicroservice/)
 
